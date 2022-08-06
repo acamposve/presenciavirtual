@@ -30,3 +30,14 @@ steps:
     rootFolderOrFile: '$(system.defaultWorkingDirectory)'
     includeRootFolder: false
 - task: PublishBuildArtifacts@1
+
+steps:
+- task: FtpUpload@2
+  displayName: 'FTP Upload: public_html'
+  inputs:
+    credentialsOption: inputs
+    serverUrl: 'ftp://c2350784.ferozo.com'
+    username: c2350784
+    password: 07rinuWUza
+    rootDirectory: 'public_html'
+    remoteDirectory: /
