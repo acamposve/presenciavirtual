@@ -36,7 +36,7 @@ steps:
   inputs:
     credentialsOption: inputs
     serverUrl: 'ftp://c2350784.ferozo.com'
-    username: c2350784
-    password: 07rinuWUza
+    username: 
+    password: 
     rootDirectory: ''
     remoteDirectory: /public_html
