@@ -31,7 +31,6 @@ steps:
     includeRootFolder: false
 - task: PublishBuildArtifacts@1
 
-steps:
 - task: FtpUpload@2
   displayName: 'FTP Upload: public_html'
   inputs:
