@@ -38,5 +38,5 @@ steps:
     serverUrl: 'ftp://c2350784.ferozo.com'
     username: c2350784
     password: 07rinuWUza
-    rootDirectory: 'public_html'
-    remoteDirectory: /
+    rootDirectory: ''
+    remoteDirectory: /public_html
