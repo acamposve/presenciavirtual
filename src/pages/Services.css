@@ -1,0 +1,63 @@
+.services {
+}
+
+.section-subtitle {
+  font-size: 1.25rem;
+  color: #6b7280;
+  margin-top: -0.5rem;
+}
+
+.service-card {
+  background-color: var(--white);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.service-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.service-card h3 {
+  color: var(--text-color);
+  margin-bottom: 1rem;
+}
+
+.service-card p {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.service-link {
+  color: var(--primary-color);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.service-link:hover {
+  transform: translateX(5px);
+}
+
+@media (max-width: 768px) {
+  .service-card {
+    padding: 1.5rem;
+  }
+
+  .service-icon {
+    font-size: 2.5rem;
+  }
+}

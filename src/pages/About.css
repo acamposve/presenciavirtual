@@ -1,0 +1,29 @@
+.about {
+}
+
+.about h1 {
+  margin-bottom: 1rem;
+}
+
+.lead {
+  font-size: 1.25rem;
+  color: #4b5563;
+  margin-bottom: 0;
+}
+
+.value-item {
+  background-color: var(--light-gray);
+  padding: 2rem;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.value-item:hover {
+  transform: translateY(-3px);
+  background-color: #e5e7eb;
+}
+
+.value-item h3 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
