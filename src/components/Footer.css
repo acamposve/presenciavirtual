@@ -1,5 +1,5 @@
 .footer {
-  background-color: var(--text-color);
+  background-color: var(--ink);
   color: var(--white);
   padding: 3rem 0 1rem;
   margin-top: 4rem;
@@ -11,23 +11,36 @@
   gap: 2rem;
   margin-bottom: 2rem;
   padding-bottom: 2rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.footer-logo {
+  height: 30px;
+  width: auto;
+  margin-bottom: 0.75rem;
 }
 
 .footer-section h3 {
-  font-size: 1.25rem;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   margin-bottom: 1rem;
 }
 
 .footer-section h4 {
-  font-size: 1rem;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
   margin-bottom: 1rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--accent-light);
 }
 
 .footer-section p {
   margin-bottom: 0.5rem;
-  opacity: 0.9;
+  opacity: 0.85;
 }
 
 .footer-section ul {
@@ -44,13 +57,13 @@
 }
 
 .footer-section a:hover {
-  color: var(--primary-color);
+  color: var(--accent-light);
 }
 
 .footer-bottom {
   text-align: center;
   padding-top: 1rem;
-  opacity: 0.8;
+  opacity: 0.7;
   font-size: 0.875rem;
 }
 
