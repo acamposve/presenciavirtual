@@ -6,14 +6,27 @@
 }
 
 :root {
-  --primary-color: #2563eb;
-  --secondary-color: #1e40af;
+  /* Marca: minimalista / corporativa */
+  --ink: #132a45;          /* navy — texto de marca, footer, headings fuertes */
+  --accent: #0ea5a5;       /* teal — CTAs, links, acentos */
+  --accent-dark: #0b8483;  /* teal oscuro — hover de acentos */
+  --accent-light: #5eead4; /* teal claro — detalles sobre fondo oscuro */
+
+  --primary-color: var(--accent);
+  --secondary-color: var(--accent-dark);
+
   --text-color: #1f2937;
+  --muted: #5b6b7c;
   --light-gray: #f3f4f6;
+  --bg-alt: #f8fafc;
   --border-color: #e5e7eb;
   --white: #ffffff;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 12px 24px rgba(15, 23, 42, 0.12);
+
+  --font-heading: 'Poppins', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Helvetica Neue', sans-serif;
 }
 
 html {
@@ -21,9 +34,7 @@ html {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--text-color);
@@ -44,9 +55,19 @@ body {
 
 /* Tipografía */
 h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
   font-weight: 600;
   line-height: 1.2;
   margin-bottom: 0.5em;
+}
+
+/* Los headings heredan color de su contenedor (body = slate oscuro,
+   .hero/.footer = blanco) para evitar pisar el contraste en fondos oscuros. */
+.section h1,
+.section h2,
+.section h3,
+.about h1 {
+  color: var(--ink);
 }
 
 h1 {

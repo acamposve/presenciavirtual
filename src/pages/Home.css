@@ -2,7 +2,7 @@
 }
 
 .hero {
-  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  background: linear-gradient(135deg, var(--ink), #0e3a5c 55%, var(--accent-dark));
   color: var(--white);
   padding: 6rem 0;
   text-align: center;

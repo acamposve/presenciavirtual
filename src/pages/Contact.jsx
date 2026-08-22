@@ -1,32 +1,34 @@
 import { useState } from 'react'
+import { useLanguage } from '../i18n/LanguageContext'
+import { CONTACT_INFO } from '../i18n/translations'
 import './Contact.css'
 
 function Contact() {
+  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
   })
 
   const [submitted, setSubmitted] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Aquí iría la lógica para enviar el formulario
+    // Aquí iría la integración con un backend / servicio de envío de formularios
     console.log('Formulario enviado:', formData)
     setSubmitted(true)
     setFormData({ name: '', email: '', phone: '', message: '' })
-    
-    // Resetear el mensaje después de 3 segundos
+
     setTimeout(() => setSubmitted(false), 3000)
   }
 
@@ -34,10 +36,8 @@ function Contact() {
     <div className="contact">
       <section className="section">
         <div className="container">
-          <h1>Contactanos</h1>
-          <p className="section-subtitle">
-            ¿Tienes alguna pregunta? Nos encantaría escucharte
-          </p>
+          <h1>{t.contact.title}</h1>
+          <p className="section-subtitle">{t.contact.subtitle}</p>
         </div>
       </section>
 
@@ -45,48 +45,48 @@ function Contact() {
         <div className="container">
           <div className="grid grid-2 contact-grid">
             <div className="contact-info">
-              <h2>Información de Contacto</h2>
-              
+              <h2>{t.contact.infoTitle}</h2>
+
               <div className="info-item">
-                <h3>Email</h3>
-                <p><a href="mailto:info@presenciavirtual.com">info@presenciavirtual.com</a></p>
+                <h3>{t.contact.emailLabel}</h3>
+                <p><a href={`mailto:${CONTACT_INFO.email}`}>{CONTACT_INFO.email}</a></p>
               </div>
 
               <div className="info-item">
-                <h3>Teléfono</h3>
-                <p><a href="tel:+34123456789">+34 123 456 789</a></p>
-              </div>
-
-              <div className="info-item">
-                <h3>Ubicación</h3>
+                <h3>{t.contact.phoneLabel}</h3>
                 <p>
-                  Presencia Virtual<br />
-                  Calle Principal 123<br />
-                  28000 Madrid, España
+                  <a href={`tel:${CONTACT_INFO.phoneHref}`}>{CONTACT_INFO.phone}</a>
+                  {' · '}
+                  <a href={CONTACT_INFO.whatsappHref} target="_blank" rel="noreferrer">WhatsApp</a>
                 </p>
               </div>
 
               <div className="info-item">
-                <h3>Horario</h3>
+                <h3>{t.contact.locationLabel}</h3>
+                <p>{t.contact.locationValue}</p>
+              </div>
+
+              <div className="info-item">
+                <h3>{t.contact.hoursLabel}</h3>
                 <p>
-                  Lunes a Viernes: 9:00 - 18:00<br />
-                  Sábado y Domingo: Cerrado
+                  {t.contact.hoursValue}<br />
+                  {t.contact.hoursValue2}
                 </p>
               </div>
             </div>
 
             <div className="contact-form">
-              <h2>Envíanos un Mensaje</h2>
-              
+              <h2>{t.contact.formTitle}</h2>
+
               {submitted && (
                 <div className="success-message">
-                  ¡Gracias por tu mensaje! Nos pondremos en contacto pronto.
+                  {t.contact.success}
                 </div>
               )}
 
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="name">Nombre</label>
+                  <label htmlFor="name">{t.contact.nameLabel}</label>
                   <input
                     type="text"
                     id="name"
@@ -94,12 +94,12 @@ function Contact() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    placeholder="Tu nombre"
+                    placeholder={t.contact.namePlaceholder}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="email">Email</label>
+                  <label htmlFor="email">{t.contact.emailLabel}</label>
                   <input
                     type="email"
                     id="email"
@@ -107,24 +107,24 @@ function Contact() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    placeholder="tu@email.com"
+                    placeholder={t.contact.emailPlaceholder}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="phone">Teléfono</label>
+                  <label htmlFor="phone">{t.contact.phoneLabel}</label>
                   <input
                     type="tel"
                     id="phone"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    placeholder="+34 123 456 789"
+                    placeholder={t.contact.phonePlaceholder}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="message">Mensaje</label>
+                  <label htmlFor="message">{t.contact.messageLabel}</label>
                   <textarea
                     id="message"
                     name="message"
@@ -132,12 +132,12 @@ function Contact() {
                     value={formData.message}
                     onChange={handleChange}
                     required
-                    placeholder="Tu mensaje aquí..."
+                    placeholder={t.contact.messagePlaceholder}
                   ></textarea>
                 </div>
 
                 <button type="submit" className="btn btn-primary">
-                  Enviar Mensaje
+                  {t.contact.submit}
                 </button>
               </form>
             </div>
