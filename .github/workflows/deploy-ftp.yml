@@ -1,0 +1,39 @@
+name: Deploy to FTP
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    # Belt-and-suspenders: even if this workflow were ever triggered another
+    # way (e.g. workflow_dispatch added later), refuse to deploy from anything
+    # but main.
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ${{ secrets.FTP_SERVER_DIR || '/' }}
