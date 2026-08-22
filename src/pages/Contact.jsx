@@ -25,7 +25,6 @@ function Contact() {
   const handleSubmit = (e) => {
     e.preventDefault()
     // Aquí iría la integración con un backend / servicio de envío de formularios
-    console.log('Formulario enviado:', formData)
     setSubmitted(true)
     setFormData({ name: '', email: '', phone: '', message: '' })
 
@@ -57,7 +56,7 @@ function Contact() {
                 <p>
                   <a href={`tel:${CONTACT_INFO.phoneHref}`}>{CONTACT_INFO.phone}</a>
                   {' · '}
-                  <a href={CONTACT_INFO.whatsappHref} target="_blank" rel="noreferrer">WhatsApp</a>
+                  <a href={CONTACT_INFO.whatsappHref} target="_blank" rel="noopener noreferrer">WhatsApp</a>
                 </p>
               </div>
 

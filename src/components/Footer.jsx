@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import { CONTACT_INFO } from '../i18n/translations'
 import './Footer.css'
@@ -18,10 +19,10 @@ function Footer() {
           <div className="footer-section">
             <h4>{t.footer.linksTitle}</h4>
             <ul>
-              <li><a href="/">{t.nav.home}</a></li>
-              <li><a href="/about">{t.nav.about}</a></li>
-              <li><a href="/services">{t.nav.services}</a></li>
-              <li><a href="/contact">{t.nav.contact}</a></li>
+              <li><Link to="/">{t.nav.home}</Link></li>
+              <li><Link to="/about">{t.nav.about}</Link></li>
+              <li><Link to="/services">{t.nav.services}</Link></li>
+              <li><Link to="/contact">{t.nav.contact}</Link></li>
             </ul>
           </div>
           <div className="footer-section">
