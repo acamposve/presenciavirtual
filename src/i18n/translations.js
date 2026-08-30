@@ -3,45 +3,65 @@ export const translations = {
     nav: {
       home: 'Inicio',
       about: 'Sobre Nosotros',
-      services: 'Servicios',
+      services: 'Soluciones',
       contact: 'Contacto',
     },
     brand: {
       name: 'Presencia Virtual',
-      tagline: 'Arquitectura de sistemas para la era de la IA',
+      tagline: 'Software Engineering · IA · Automatización',
     },
     home: {
-      heroTitle: 'Arquitectura de sistemas para la era de la IA',
+      heroTitle: 'Ingeniería de software e IA para empresas',
       heroSubtitle:
-        'Diseñamos sistemas de inteligencia artificial desde cero y optimizamos los que ya tenés. Con base en Montevideo, trabajamos con empresas de cualquier tamaño y en cualquier parte del mundo.',
-      ctaServices: 'Ver servicios',
-      ctaContact: 'Conversemos',
-      whyTitle: '¿Por qué trabajar con nosotros?',
-      features: [
+        'Diseñamos y construimos sistemas inteligentes que automatizan procesos, integran información y convierten operaciones complejas en soluciones digitales escalables.',
+      ctaServices: 'Ver soluciones',
+      ctaContact: 'Hablemos de tu proyecto',
+      whenTitle: '¿Cuándo llamarnos?',
+      whenSubtitle: 'Presencia Virtual puede ayudarte si...',
+      whenItems: [
         {
-          icon: '🧩',
-          title: 'Visión de arquitecto',
-          desc: 'Pensamos en el sistema completo: datos, modelos, infraestructura e integración — no solo un modelo aislado.',
+          trigger: 'Tu empresa todavía depende de procesos manuales.',
+          solution: 'Podemos automatizarlos.',
         },
         {
-          icon: '⚙️',
-          title: 'Desde cero o desde lo existente',
-          desc: 'Diseñamos sistemas de IA nuevos o mejoramos la arquitectura que ya tenés, sin reescribir todo de nuevo.',
+          trigger: 'Tenés información repartida entre varios sistemas.',
+          solution: 'Podemos integrarla.',
         },
         {
-          icon: '🌎',
-          title: 'Alcance global',
-          desc: 'Con base en Montevideo, Uruguay, atendemos empresas de cualquier país de forma remota.',
+          trigger: 'Tus empleados pierden tiempo buscando información.',
+          solution: 'Podemos crear sistemas inteligentes de consulta.',
+        },
+        {
+          trigger: 'Tenés documentos que alguien debe revisar manualmente.',
+          solution: 'Podemos automatizar la extracción y el análisis.',
+        },
+        {
+          trigger: 'Tenés un sistema antiguo que ya no escala.',
+          solution: 'Podemos modernizarlo.',
+        },
+        {
+          trigger: 'Querés incorporar IA pero no sabés por dónde empezar.',
+          solution: 'Podemos diseñar la arquitectura y construir el primer producto.',
         },
       ],
+      diffTitle: 'IA sobre lo que ya tenés',
+      diffSubtitle:
+        'No hace falta reconstruir todo para ser una empresa inteligente. La mayoría de tus datos ya existen — en tu ERP, tus contratos, tus emails. Construimos la capa de IA que los conecta.',
+      diffDiagram: {
+        source: 'ERP',
+        sourceItems: ['Facturas', 'Contratos', 'Clientes', 'Inventario', 'Emails'],
+        layer: 'Capa de IA',
+        layerItems: ['Clasificación', 'Extracción', 'Búsqueda', 'Agentes', 'Automatización'],
+        output: 'Acciones de negocio',
+      },
       ctaTitle: '¿Listo para llevar tu sistema al siguiente nivel?',
       ctaText: 'Contanos en qué estás trabajando y veamos juntos cómo mejorarlo.',
-      ctaButton: 'Solicitar una consulta',
+      ctaButton: 'Hablemos de tu proyecto',
     },
     about: {
       title: 'Sobre Presencia Virtual',
       lead:
-        'Presencia Virtual es un estudio de arquitectura de sistemas orientados a la inteligencia artificial. Ayudamos a diseñar sistemas de IA desde cero y a mejorar los que ya existen, con una mirada de arquitecto, no solo de desarrollador.',
+        'Construimos sistemas de software e inteligencia artificial para resolver problemas reales de negocio. Somos la alternativa especializada para empresas que necesitan resolver un problema tecnológico complejo sin contratar una consultora enorme.',
       missionTitle: 'Nuestra misión',
       missionP1:
         'Que la inteligencia artificial deje de ser un experimento aislado y se convierta en un sistema sólido, mantenible y alineado con los objetivos del negocio — sin importar el tamaño de la empresa o su punto de partida.',
@@ -49,7 +69,7 @@ export const translations = {
         'Trabajamos tanto con empresas que quieren construir su primer sistema de IA como con las que ya tienen uno y necesitan escalarlo, ordenarlo o integrarlo mejor con el resto de su operación.',
       founderTitle: 'Quién está detrás',
       founderP:
-        'Presencia Virtual está liderado por Alex Campos, arquitecto de sistemas especializado en soluciones orientadas a IA. Con base en Montevideo, Uruguay, trabaja con clientes de cualquier país — diseñando sistemas nuevos o mejorando arquitecturas existentes.',
+        'Presencia Virtual está liderado por Alex Campos, con más de dos décadas de experiencia en desarrollo de software y una evolución hacia arquitectura moderna, sistemas distribuidos e inteligencia artificial. Con base en Montevideo, Uruguay, trabaja con clientes de cualquier país — diseñando sistemas nuevos o mejorando arquitecturas existentes.',
       valuesTitle: 'Nuestros valores',
       values: [
         {
@@ -71,45 +91,99 @@ export const translations = {
       ],
     },
     services: {
-      title: 'Servicios',
+      title: 'Soluciones',
       subtitle:
-        'Arquitectura de sistemas de IA para empresas que recién empiezan y para las que ya tienen sistemas en producción.',
-      list: [
+        'Diseñamos y construimos sistemas inteligentes para resolver problemas reales de negocio — desde automatización puntual hasta arquitecturas de IA completas.',
+      pillarsTitle: 'Cuatro capacidades, un mismo objetivo',
+      pillars: [
         {
-          icon: '🏗️',
-          title: 'Arquitectura de sistemas de IA desde cero',
-          desc: 'Diseño integral de sistemas de IA: datos, modelos, infraestructura e integración, alineado a los objetivos del negocio.',
-        },
-        {
-          icon: '🔍',
-          title: 'Auditoría y optimización de sistemas existentes',
-          desc: 'Revisamos la arquitectura que ya tenés y la mejoramos en performance, costos y escalabilidad.',
-        },
-        {
-          icon: '🔗',
-          title: 'Integración de IA en sistemas actuales',
-          desc: 'Incorporamos capacidades de IA (LLMs, automatización, agentes) en tus sistemas y flujos de trabajo.',
+          icon: '🧠',
+          title: 'Inteligencia Artificial',
+          desc: 'Agentes de IA, RAG y asistentes que ponen a trabajar tu información.',
+          items: [
+            'AI Agents',
+            'RAG',
+            'Document Intelligence',
+            'AI workflows',
+            'Asistentes empresariales',
+            'Extracción y clasificación de información',
+          ],
         },
         {
           icon: '⚙️',
-          title: 'Infraestructura y escalabilidad (MLOps)',
-          desc: 'Diseño de infraestructura para entrenar, desplegar y monitorear modelos de forma confiable.',
+          title: 'Software empresarial',
+          desc: 'Sistemas y plataformas a medida para operar y escalar tu negocio.',
+          items: [
+            'Sistemas internos',
+            'Plataformas empresariales',
+            'APIs',
+            'Microservicios',
+            'Integraciones',
+            'Modernización de aplicaciones',
+          ],
         },
         {
-          icon: '🤖',
-          title: 'Automatización de procesos con IA',
-          desc: 'Identificamos procesos manuales y los transformamos en flujos automatizados con IA.',
+          icon: '🔄',
+          title: 'Automatización',
+          desc: 'Convertimos procesos manuales en workflows digitales conectados a tus sistemas.',
+          items: [
+            'Automatización de procesos',
+            'Integración entre sistemas',
+            'Workflows',
+            'Procesamiento documental',
+            'Reducción de tareas manuales',
+          ],
         },
         {
-          icon: '🧭',
-          title: 'Asesoría técnica y auditoría de arquitectura',
-          desc: 'Revisión independiente de tu arquitectura actual, con recomendaciones concretas y priorizadas.',
+          icon: '☁️',
+          title: 'Cloud & Architecture',
+          desc: 'Arquitecturas modernas, seguras y preparadas para escalar.',
+          items: [
+            'Azure',
+            'Arquitectura cloud',
+            'Sistemas distribuidos',
+            'Seguridad',
+            'Observabilidad',
+            'Escalabilidad',
+          ],
         },
       ],
-      linkText: 'Más información →',
-      ctaTitle: '¿Necesitás algo a medida?',
-      ctaText: 'Conversemos sobre tu sistema y tus objetivos. Primera consulta sin costo.',
-      ctaButton: 'Solicitar consulta',
+      useCasesTitle: 'Casos de uso',
+      useCasesSubtitle: 'Así se ven estas soluciones en la práctica.',
+      useCases: [
+        {
+          icon: '📄',
+          title: 'Documentos',
+          desc: 'Automatiza la recepción, clasificación y extracción de información de documentos empresariales.',
+        },
+        {
+          icon: '📑',
+          title: 'Contratos',
+          desc: 'Compara contratos, identifica cláusulas relevantes y detecta diferencias automáticamente.',
+        },
+        {
+          icon: '🔁',
+          title: 'Operaciones',
+          desc: 'Convierte procesos manuales en workflows automatizados conectados a tus sistemas existentes.',
+        },
+        {
+          icon: '💬',
+          title: 'Asistentes empresariales',
+          desc: 'Permite que tus equipos consulten información interna mediante lenguaje natural.',
+        },
+      ],
+      architectureTitle: 'Diseñamos sistemas preparados para crecer',
+      architectureText:
+        'Arquitecturas modulares, seguras y preparadas para incorporar IA sin tener que reconstruir todo el sistema.',
+      architectureDiagram: {
+        users: 'Usuarios',
+        api: 'API',
+        branches: ['Servicios', 'Capa de IA', 'Integraciones'],
+        leaves: ['Base de datos', 'Vector Store', 'ERP/CRM'],
+      },
+      ctaTitle: '¿Tenés un problema tecnológico complejo?',
+      ctaText: 'Hablemos de tu proyecto. Primera consulta sin costo.',
+      ctaButton: 'Hablemos de tu proyecto',
     },
     contact: {
       title: 'Contacto',
@@ -130,10 +204,12 @@ export const translations = {
       messageLabel: 'Mensaje',
       messagePlaceholder: 'Contanos brevemente tu proyecto o sistema actual...',
       submit: 'Enviar mensaje',
+      sending: 'Enviando...',
       success: '¡Gracias por tu mensaje! Nos pondremos en contacto pronto.',
+      error: 'No pudimos enviar tu mensaje. Probá de nuevo o escribinos directamente por email.',
     },
     footer: {
-      about: 'Estudio de arquitectura de sistemas de IA, con base en Montevideo y alcance global.',
+      about: 'Software engineering, IA y automatización para empresas, con base en Montevideo y alcance global.',
       linksTitle: 'Enlaces',
       contactTitle: 'Contacto',
       rights: 'Todos los derechos reservados.',
@@ -143,45 +219,65 @@ export const translations = {
     nav: {
       home: 'Home',
       about: 'About',
-      services: 'Services',
+      services: 'Solutions',
       contact: 'Contact',
     },
     brand: {
       name: 'Presencia Virtual',
-      tagline: 'Systems architecture for the AI era',
+      tagline: 'Software Engineering · AI · Automation',
     },
     home: {
-      heroTitle: 'Systems architecture for the AI era',
+      heroTitle: 'Software engineering & AI for businesses',
       heroSubtitle:
-        "We design AI systems from scratch and optimize the ones you already have. Based in Montevideo, we work with companies of any size, anywhere in the world.",
-      ctaServices: 'View services',
-      ctaContact: "Let's talk",
-      whyTitle: 'Why work with us?',
-      features: [
+        'We design and build intelligent systems that automate processes, integrate information, and turn complex operations into scalable digital solutions.',
+      ctaServices: 'View solutions',
+      ctaContact: "Let's talk about your project",
+      whenTitle: 'When to call us',
+      whenSubtitle: 'Presencia Virtual can help if...',
+      whenItems: [
         {
-          icon: '🧩',
-          title: "An architect's perspective",
-          desc: 'We think in terms of the whole system: data, models, infrastructure and integration — not just an isolated model.',
+          trigger: 'Your company still relies on manual processes.',
+          solution: 'We can automate them.',
         },
         {
-          icon: '⚙️',
-          title: 'From scratch or from what exists',
-          desc: 'We design new AI systems or improve the architecture you already have, without a costly full rewrite.',
+          trigger: 'Your information is scattered across several systems.',
+          solution: 'We can integrate it.',
         },
         {
-          icon: '🌎',
-          title: 'Global reach',
-          desc: 'Based in Montevideo, Uruguay, we work with companies in any country, fully remote.',
+          trigger: 'Your team wastes time searching for information.',
+          solution: 'We can build intelligent systems to query it.',
+        },
+        {
+          trigger: 'You have documents that someone has to review manually.',
+          solution: 'We can automate extraction and analysis.',
+        },
+        {
+          trigger: "You have an old system that doesn't scale anymore.",
+          solution: 'We can modernize it.',
+        },
+        {
+          trigger: "You want to adopt AI but don't know where to start.",
+          solution: 'We can design the architecture and build the first product.',
         },
       ],
+      diffTitle: 'AI on top of what you already have',
+      diffSubtitle:
+        "You don't need to rebuild everything to become an intelligent company. Most of your data already exists — in your ERP, your contracts, your emails. We build the AI layer that connects it.",
+      diffDiagram: {
+        source: 'ERP',
+        sourceItems: ['Invoices', 'Contracts', 'Customers', 'Inventory', 'Emails'],
+        layer: 'AI Layer',
+        layerItems: ['Classification', 'Extraction', 'Search', 'Agents', 'Automation'],
+        output: 'Business actions',
+      },
       ctaTitle: 'Ready to take your system to the next level?',
       ctaText: "Tell us what you're working on and let's see together how to improve it.",
-      ctaButton: 'Request a consultation',
+      ctaButton: "Let's talk about your project",
     },
     about: {
       title: 'About Presencia Virtual',
       lead:
-        "Presencia Virtual is a systems architecture studio focused on artificial intelligence. We help design AI systems from scratch and improve the ones that already exist, with an architect's perspective, not just a developer's.",
+        'We build software and artificial intelligence systems to solve real business problems. We are the specialized alternative for companies that need to solve a complex technology problem without hiring a huge consultancy.',
       missionTitle: 'Our mission',
       missionP1:
         'For artificial intelligence to stop being an isolated experiment and become a solid, maintainable system aligned with business goals — regardless of company size or starting point.',
@@ -189,7 +285,7 @@ export const translations = {
         'We work with companies building their first AI system as well as those that already have one and need to scale it, restructure it, or integrate it better with the rest of their operation.',
       founderTitle: "Who's behind it",
       founderP:
-        'Presencia Virtual is led by Alex Campos, a systems architect specialized in AI-oriented solutions. Based in Montevideo, Uruguay, working with clients in any country — designing new systems or improving existing architectures.',
+        'Presencia Virtual is led by Alex Campos, with over two decades of software development experience and an ongoing evolution toward modern architecture, distributed systems, and artificial intelligence. Based in Montevideo, Uruguay, working with clients in any country — designing new systems or improving existing architectures.',
       valuesTitle: 'Our values',
       values: [
         {
@@ -211,45 +307,99 @@ export const translations = {
       ],
     },
     services: {
-      title: 'Services',
+      title: 'Solutions',
       subtitle:
-        'AI systems architecture for companies just getting started and for those with systems already in production.',
-      list: [
+        'We design and build intelligent systems to solve real business problems — from targeted automation to full AI architectures.',
+      pillarsTitle: 'Four capabilities, one goal',
+      pillars: [
         {
-          icon: '🏗️',
-          title: 'AI systems architecture from scratch',
-          desc: 'End-to-end design of AI systems: data, models, infrastructure and integration, aligned with business goals.',
-        },
-        {
-          icon: '🔍',
-          title: 'Audit & optimization of existing systems',
-          desc: 'We review your current architecture and improve it in performance, cost and scalability.',
-        },
-        {
-          icon: '🔗',
-          title: 'Integrating AI into current systems',
-          desc: 'We add AI capabilities (LLMs, automation, agents) into your existing systems and workflows.',
+          icon: '🧠',
+          title: 'Artificial Intelligence',
+          desc: 'AI agents, RAG and assistants that put your information to work.',
+          items: [
+            'AI Agents',
+            'RAG',
+            'Document Intelligence',
+            'AI workflows',
+            'Enterprise assistants',
+            'Information extraction & classification',
+          ],
         },
         {
           icon: '⚙️',
-          title: 'Infrastructure & scalability (MLOps)',
-          desc: 'Infrastructure design to train, deploy and monitor models reliably at scale.',
+          title: 'Enterprise software',
+          desc: 'Custom systems and platforms to run and scale your business.',
+          items: [
+            'Internal systems',
+            'Enterprise platforms',
+            'APIs',
+            'Microservices',
+            'Integrations',
+            'Application modernization',
+          ],
         },
         {
-          icon: '🤖',
-          title: 'AI-driven process automation',
-          desc: 'We identify manual processes and turn them into AI-driven automated workflows.',
+          icon: '🔄',
+          title: 'Automation',
+          desc: 'We turn manual processes into digital workflows connected to your systems.',
+          items: [
+            'Process automation',
+            'System integration',
+            'Workflows',
+            'Document processing',
+            'Reducing manual work',
+          ],
         },
         {
-          icon: '🧭',
-          title: 'Technical advisory & architecture reviews',
-          desc: 'Independent review of your current architecture, with concrete, prioritized recommendations.',
+          icon: '☁️',
+          title: 'Cloud & Architecture',
+          desc: 'Modern, secure architectures built to scale.',
+          items: [
+            'Azure',
+            'Cloud architecture',
+            'Distributed systems',
+            'Security',
+            'Observability',
+            'Scalability',
+          ],
         },
       ],
-      linkText: 'Learn more →',
-      ctaTitle: 'Need something custom?',
-      ctaText: "Let's talk about your system and your goals. First consultation is free.",
-      ctaButton: 'Request a consultation',
+      useCasesTitle: 'Use cases',
+      useCasesSubtitle: "Here's what these solutions look like in practice.",
+      useCases: [
+        {
+          icon: '📄',
+          title: 'Documents',
+          desc: 'Automate the intake, classification and extraction of information from business documents.',
+        },
+        {
+          icon: '📑',
+          title: 'Contracts',
+          desc: 'Compare contracts, identify relevant clauses and detect differences automatically.',
+        },
+        {
+          icon: '🔁',
+          title: 'Operations',
+          desc: 'Turn manual processes into automated workflows connected to your existing systems.',
+        },
+        {
+          icon: '💬',
+          title: 'Enterprise assistants',
+          desc: 'Let your teams query internal information using natural language.',
+        },
+      ],
+      architectureTitle: 'We design systems built to grow',
+      architectureText:
+        'Modular, secure architectures ready to incorporate AI without rebuilding the whole system.',
+      architectureDiagram: {
+        users: 'Users',
+        api: 'API',
+        branches: ['Services', 'AI Layer', 'Integrations'],
+        leaves: ['Database', 'Vector Store', 'ERP/CRM'],
+      },
+      ctaTitle: 'Have a complex technology problem?',
+      ctaText: "Let's talk about your project. First consultation is free.",
+      ctaButton: "Let's talk about your project",
     },
     contact: {
       title: 'Contact',
@@ -270,10 +420,12 @@ export const translations = {
       messageLabel: 'Message',
       messagePlaceholder: 'Tell us briefly about your project or current system...',
       submit: 'Send message',
+      sending: 'Sending...',
       success: "Thanks for your message! We'll get back to you soon.",
+      error: "We couldn't send your message. Please try again or email us directly.",
     },
     footer: {
-      about: 'AI systems architecture studio, based in Montevideo with global reach.',
+      about: 'Software engineering, AI and automation for businesses, based in Montevideo with global reach.',
       linksTitle: 'Links',
       contactTitle: 'Contact',
       rights: 'All rights reserved.',

@@ -81,6 +81,112 @@
   }
 }
 
+/* When to call us */
+.when-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+.when-item {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-left: 3px solid var(--accent);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+
+.when-trigger {
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.when-solution {
+  color: var(--ink);
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+/* AI on top of existing systems */
+.diff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.diff-copy h2 {
+  margin-bottom: 1rem;
+}
+
+.diff-copy p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+.ai-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.ai-diagram-box {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.ai-diagram-box strong {
+  display: block;
+  color: var(--ink);
+  font-family: var(--font-heading);
+  margin-bottom: 0.75rem;
+}
+
+.ai-diagram-box-accent {
+  border-color: var(--accent);
+}
+
+.ai-diagram-output {
+  text-align: center;
+}
+
+.ai-diagram-output strong {
+  margin-bottom: 0;
+}
+
+.ai-diagram-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ai-diagram-chip {
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.ai-diagram-chip-accent {
+  background-color: rgba(14, 165, 165, 0.08);
+  border-color: var(--accent);
+  color: var(--accent-dark);
+}
+
+.ai-diagram-connector {
+  width: 2px;
+  height: 1.75rem;
+  background-color: var(--border-color);
+  margin: 0 auto;
+}
+
 @media (max-width: 768px) {
   .hero {
     padding: 4rem 0;
@@ -102,5 +208,10 @@
   .btn {
     width: 100%;
     text-align: center;
+  }
+
+  .diff-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 }
