@@ -52,6 +52,151 @@
   transform: translateX(5px);
 }
 
+/* Four pillars */
+.pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.pillar-card {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+.pillar-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.pillar-card h3 {
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+}
+
+.pillar-card p {
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+.pillar-items {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+.pillar-items li {
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Architecture diagram */
+.arch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.arch-copy h2 {
+  margin-bottom: 1rem;
+}
+
+.arch-copy p {
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+.arch-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arch-node {
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.arch-node-accent {
+  border-color: var(--accent);
+  color: var(--accent-dark);
+}
+
+.arch-node-small {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+.arch-node-leaf {
+  background-color: var(--bg-alt);
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+}
+
+.arch-connector {
+  width: 2px;
+  height: 1.5rem;
+  background-color: var(--border-color);
+}
+
+.arch-connector.small {
+  height: 1rem;
+}
+
+.arch-fan {
+  position: relative;
+  width: 100%;
+  height: 1.5rem;
+}
+
+.arch-fan-line {
+  position: absolute;
+  top: 0;
+  left: 16.666%;
+  right: 16.666%;
+  border-top: 2px solid var(--border-color);
+}
+
+.arch-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+.arch-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.arch-drop {
+  width: 2px;
+  height: 1.5rem;
+  background-color: var(--border-color);
+}
+
 @media (max-width: 768px) {
   .service-card {
     padding: 1.5rem;
@@ -59,5 +204,20 @@
 
   .service-icon {
     font-size: 2.5rem;
+  }
+
+  .arch-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .pillars-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .arch-node-small,
+  .arch-node-leaf {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.5rem;
   }
 }

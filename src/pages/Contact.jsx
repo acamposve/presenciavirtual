@@ -10,9 +10,12 @@ function Contact() {
     email: '',
     phone: '',
     message: '',
+    website: '',
   })
 
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState(false)
+  const [sending, setSending] = useState(false)
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -22,13 +25,29 @@ function Contact() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Aquí iría la integración con un backend / servicio de envío de formularios
-    setSubmitted(true)
-    setFormData({ name: '', email: '', phone: '', message: '' })
+    setSending(true)
+    setError(false)
 
-    setTimeout(() => setSubmitted(false), 3000)
+    try {
+      const body = new URLSearchParams(formData)
+      const res = await fetch('/contact-send.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body,
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) throw new Error(data.error || 'send_failed')
+
+      setSubmitted(true)
+      setFormData({ name: '', email: '', phone: '', message: '', website: '' })
+      setTimeout(() => setSubmitted(false), 5000)
+    } catch {
+      setError(true)
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -83,7 +102,23 @@ function Contact() {
                 </div>
               )}
 
+              {error && (
+                <div className="error-message">
+                  {t.contact.error}
+                </div>
+              )}
+
               <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  name="website"
+                  className="hp-field"
+                  value={formData.website}
+                  onChange={handleChange}
+                  tabIndex="-1"
+                  autoComplete="off"
+                  aria-hidden="true"
+                />
                 <div className="form-group">
                   <label htmlFor="name">{t.contact.nameLabel}</label>
                   <input
@@ -135,8 +170,8 @@ function Contact() {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="btn btn-primary">
-                  {t.contact.submit}
+                <button type="submit" className="btn btn-primary" disabled={sending}>
+                  {sending ? t.contact.sending : t.contact.submit}
                 </button>
               </form>
             </div>

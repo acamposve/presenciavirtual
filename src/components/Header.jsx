@@ -10,7 +10,10 @@ function Header() {
       <div className="container header-content">
         <Link to="/" className="logo">
           <img src="/logo-icon.svg" alt="Presencia Virtual" className="logo-img" />
-          <span>{t.brand.name}</span>
+          <span className="logo-text">
+            <span className="logo-name">{t.brand.name}</span>
+            <span className="logo-tagline">{t.brand.tagline}</span>
+          </span>
         </Link>
         <nav className="nav">
           <Link to="/">{t.nav.home}</Link>
