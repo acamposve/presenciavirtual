@@ -22,6 +22,10 @@ function Footer() {
               <li><Link to="/">{t.nav.home}</Link></li>
               <li><Link to="/about">{t.nav.about}</Link></li>
               <li><Link to="/services">{t.nav.services}</Link></li>
+              <li><Link to="/domains">{t.nav.domains}</Link></li>
+              <li><Link to="/hosting">{t.nav.hosting}</Link></li>
+              <li><Link to="/web-development">{t.nav.webDevelopment}</Link></li>
+              <li><Link to="/ai-consulting">{t.nav.aiConsulting}</Link></li>
               <li><Link to="/contact">{t.nav.contact}</Link></li>
             </ul>
           </div>
