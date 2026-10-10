@@ -11,6 +11,9 @@ build
 .env.local
 .env.*.local
 
+# API credentials
+public/api/config.php
+
 # IDE
 .vscode
 .idea

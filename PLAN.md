@@ -51,6 +51,13 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 **Dev experience**
 - Vite proxy for `/api` to a local PHP server, or a mock response for local development.
 
+**Implementation notes (as built)**
+- ResellersPanel API (official PDF v2.4.1): single endpoint with `auth_username`/`auth_password`, `section=domains&command=check&name=<sld>&tlds[]=...`. The API host is issued per reseller in the control panel. The sub-fields of the `check` result are not documented, so the adapter in `domain-check.php` parses tolerantly; confirm against a live call.
+- Prices shown come from a static allow-list in `config.php` (`tld_prices`), not from the API.
+- The API has no pre-filled public order link (orders are placed server-side via `order_domains`). "Register" therefore uses a configurable `order_url` with a `{domain}` placeholder, to be set to the ResellersPanel storefront/order form.
+- Chips under the hero bar are informational only (no prices, not clickable).
+- Dev: `vite.config.js` mocks `/api/domain-check.php` (names containing "taken" are reported as registered).
+
 ## Phase 3: Hosting page
 - Plan comparison cards (e.g. Starter, Business, Pro) with monthly/annual toggle.
 - Feature lists in ES and EN; CTA links to the ResellersPanel order flow.
