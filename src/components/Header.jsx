@@ -9,6 +9,7 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [offerOpen, setOfferOpen] = useState(false)
   const offerRef = useRef(null)
+  const offerToggleRef = useRef(null)
 
   const offerLinks = [
     { to: '/domains', label: t.nav.domains },
@@ -30,7 +31,11 @@ function Header() {
       if (offerRef.current && !offerRef.current.contains(e.target)) setOfferOpen(false)
     }
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') setOfferOpen(false)
+      if (e.key !== 'Escape') return
+      if (offerRef.current && offerRef.current.contains(document.activeElement)) {
+        offerToggleRef.current?.focus()
+      }
+      setOfferOpen(false)
     }
 
     document.addEventListener('mousedown', handlePointerDown)
@@ -55,6 +60,12 @@ function Header() {
           id="main-nav"
           className={`nav${menuOpen ? ' nav-open' : ''}`}
           aria-label={t.nav.mainLabel}
+          onClick={(e) => {
+            if (e.target.closest('a')) {
+              setMenuOpen(false)
+              setOfferOpen(false)
+            }
+          }}
         >
           <Link to="/">{t.nav.home}</Link>
           <Link to="/about">{t.nav.about}</Link>
@@ -63,6 +74,7 @@ function Header() {
             <button
               type="button"
               className={`nav-dropdown-toggle${offerActive ? ' active' : ''}`}
+              ref={offerToggleRef}
               aria-expanded={offerOpen}
               aria-controls="nav-offer-menu"
               onClick={() => setOfferOpen((open) => !open)}

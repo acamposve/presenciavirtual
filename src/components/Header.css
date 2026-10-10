@@ -273,17 +273,7 @@
     width: 100%;
   }
 
-  .nav-dropdown-toggle {
-    cursor: default;
-    pointer-events: none;
-  }
-
-  .nav-caret {
-    display: none;
-  }
-
   .nav-dropdown-menu {
-    display: flex;
     position: static;
     transform: none;
     min-width: 0;
