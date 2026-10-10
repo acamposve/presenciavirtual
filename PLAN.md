@@ -52,9 +52,9 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - Vite proxy for `/api` to a local PHP server, or a mock response for local development.
 
 **Implementation notes (as built)**
-- ResellersPanel API (official PDF v2.4.1): single endpoint with `auth_username`/`auth_password`, `section=domains&command=check&name=<sld>&tlds[]=...`. The API host is issued per reseller in the control panel. The sub-fields of the `check` result are not documented, so the adapter in `domain-check.php` parses tolerantly; confirm against a live call.
-- Prices shown come from a static allow-list in `config.php` (`tld_prices`), not from the API.
-- The API has no pre-filled public order link (orders are placed server-side via `order_domains`). "Register" therefore uses a configurable `order_url` with a `{domain}` placeholder, to be set to the ResellersPanel storefront/order form.
+- ResellersPanel API (official PDF v2.4.1), host `https://api.duoservers.com`, store `pvirtual`: single endpoint with `auth_username`/`auth_password`. Verified live: `domains/check` returns `result: { tld: 1|0 }` (1 = registered, 0 = available; TLDs the store does not sell are omitted), and `products/get_registerdomains` returns offered TLDs with 12-month prices and promotions. Serialized responses are wrapped under index `1`.
+- Prices come from the API (cached 1h; first-year promo price shown with the regular price struck through). `.uy` / `.com.uy` are not offered by the store, so they are not shown.
+- "Register" links to the store's own search page: `https://pvirtual.duoservers.com/dominios/resultados/?sld={name}` (takes the name only and runs its own search). Configurable via `order_url`.
 - Chips under the hero bar are informational only (no prices, not clickable).
 - Dev: `vite.config.js` mocks `/api/domain-check.php` (names containing "taken" are reported as registered).
 

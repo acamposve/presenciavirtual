@@ -21,21 +21,6 @@ if (!is_file($configFile)) {
 }
 $config = require $configFile;
 
-// --- Input validation -------------------------------------------------------
-
-$name = strtolower(trim((string) ($_GET['name'] ?? '')));
-if (!preg_match('/^(?!-)[a-z0-9-]{1,63}(?<!-)$/', $name)) {
-    respond(422, ['ok' => false, 'error' => 'invalid_name']);
-}
-
-$allowed = array_keys($config['tld_prices']);
-$requested = array_values(array_intersect(array_filter(array_map('trim', explode(',', strtolower((string) ($_GET['tlds'] ?? ''))))), $allowed));
-// The requested TLD comes first; the popular ones are added as alternatives.
-$tlds = array_slice(array_values(array_unique(array_merge($requested, $config['default_tlds']))), 0, 12);
-if (!$tlds) {
-    respond(422, ['ok' => false, 'error' => 'invalid_tld']);
-}
-
 // --- Per-IP rate limit (file based, works on shared hosting) ----------------
 
 function rate_limited(string $ip, int $max, int $windowSeconds): bool
@@ -57,92 +42,128 @@ function rate_limited(string $ip, int $max, int $windowSeconds): bool
     return false;
 }
 
-$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-if (rate_limited($ip, (int) $config['rate_limit_per_minute'], 60)) {
-    respond(429, ['ok' => false, 'error' => 'rate_limited']);
-}
-
 // --- ResellersPanel adapter -------------------------------------------------
-// Isolated on purpose: this is the only place that knows the API's shape.
-// The docs do not spell out the sub-fields of the `check` result, so parsing is
-// tolerant. Returns [tld => bool|null]; null means "could not be determined".
+// The only code that knows the API's shape. Single endpoint, query-string
+// commands, PHP-serialized responses.
 
-function normalize_status($value): ?bool
+function rp_call(array $config, array $params): array
 {
-    if (is_array($value)) {
-        foreach (['available', 'status', 'result'] as $key) {
-            if (array_key_exists($key, $value)) {
-                return normalize_status($value[$key]);
-            }
-        }
-        return null;
-    }
-    if (is_bool($value)) {
-        return $value;
-    }
-    $text = strtolower((string) $value);
-    if (in_array($text, ['1', 'true', 'yes', 'available', 'free'], true)) {
-        return true;
-    }
-    if (in_array($text, ['0', 'false', 'no', 'taken', 'unavailable', 'registered'], true)) {
-        return false;
-    }
-    return null;
-}
-
-function resellerspanel_check(array $config, string $name, array $tlds): array
-{
-    $query = http_build_query([
+    $query = http_build_query(array_merge([
         'auth_username' => $config['api_username'],
         'auth_password' => $config['api_password'],
-        'section' => 'domains',
-        'command' => 'check',
         'return_type' => 'serialization',
-        'name' => $name,
-        'tlds' => $tlds,
-    ]);
+    ], $params));
 
     $ctx = stream_context_create(['http' => ['method' => 'GET', 'timeout' => 8, 'ignore_errors' => true]]);
     $raw = @file_get_contents(rtrim($config['api_url'], '/') . '/?' . $query, false, $ctx);
     if ($raw === false) {
         throw new RuntimeException('upstream_unreachable');
     }
-
     $data = @unserialize($raw, ['allowed_classes' => false]);
+    // Single-command responses come wrapped under index 1.
+    if (is_array($data) && isset($data[1]) && is_array($data[1])) {
+        $data = $data[1];
+    }
     if (!is_array($data) || (int) ($data['error_code'] ?? 1) !== 0) {
         throw new RuntimeException('upstream_error');
     }
+    return $data;
+}
 
-    $out = array_fill_keys($tlds, null);
-    foreach ((array) ($data['result'] ?? []) as $key => $value) {
-        // Entries may be keyed by TLD ("com" => ...) or be rows with a tld field.
-        $tld = is_string($key) ? ltrim(strtolower($key), '.') : null;
-        if (is_array($value) && isset($value['tld'])) {
-            $tld = ltrim(strtolower((string) $value['tld']), '.');
+function cached(string $key, int $seconds, callable $load): array
+{
+    $file = sys_get_temp_dir() . '/pv_dc_' . md5($key) . '.json';
+    if (is_file($file) && filemtime($file) > time() - $seconds) {
+        $data = json_decode((string) file_get_contents($file), true);
+        if (is_array($data)) {
+            return $data;
         }
-        if ($tld !== null && array_key_exists($tld, $out)) {
-            $out[$tld] = normalize_status($value);
+    }
+    $data = $load();
+    file_put_contents($file, json_encode($data), LOCK_EX);
+    return $data;
+}
+
+// Offered TLDs with their 12-month USD price; a first-year promo price wins when present.
+function rp_prices(array $config): array
+{
+    $data = rp_call($config, [
+        'section' => 'products',
+        'command' => 'get_registerdomains',
+        'currencies' => ['USD'],
+        'periods' => [12],
+        'prices' => ['price'],
+        'active' => 1,
+    ]);
+
+    $out = [];
+    foreach ((array) ($data['registerdomains'] ?? []) as $tld => $product) {
+        if (!is_array($product) || !isset($product['prices'])) {
+            continue;
         }
+        $price = (float) $product['prices'];
+        $promo = null;
+        foreach ((array) ($product['promotions'] ?? []) as $p) {
+            if (($p['promo_type'] ?? '') === 'register' && isset($p['prices']) && (float) $p['prices'] > 0) {
+                $promo = $promo === null ? (float) $p['prices'] : min($promo, (float) $p['prices']);
+            }
+        }
+        $tld = strtolower(str_replace('_', '.', (string) $tld));
+        $out[$tld] = ['price' => $promo ?? $price, 'regular' => $price, 'promo' => $promo !== null];
     }
     return $out;
 }
 
-// --- Cache (short-lived) ----------------------------------------------------
+// Result is keyed by TLD: 1 = registered, 0 = available. TLDs the store
+// does not sell are omitted from the response.
+function rp_check(array $config, string $name, array $tlds): array
+{
+    $data = rp_call($config, [
+        'section' => 'domains',
+        'command' => 'check',
+        'name' => $name,
+        'tlds' => array_map(fn (string $t): string => $t, $tlds),
+    ]);
 
-$cacheFile = sys_get_temp_dir() . '/pv_dc_' . md5($name . '|' . implode(',', $tlds)) . '.json';
-$statuses = null;
-if (is_file($cacheFile) && filemtime($cacheFile) > time() - (int) $config['cache_seconds']) {
-    $statuses = json_decode((string) file_get_contents($cacheFile), true);
-}
-
-if (!is_array($statuses)) {
-    try {
-        $statuses = resellerspanel_check($config, $name, $tlds);
-    } catch (RuntimeException $e) {
-        respond(502, ['ok' => false, 'error' => $e->getMessage()]);
+    $out = [];
+    foreach ((array) ($data['result'] ?? []) as $tld => $taken) {
+        $out[strtolower((string) $tld)] = ((string) $taken) === '0';
     }
-    file_put_contents($cacheFile, json_encode($statuses), LOCK_EX);
+    return $out;
 }
+
+// --- Input validation -------------------------------------------------------
+
+$ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+if (rate_limited($ip, (int) $config['rate_limit_per_minute'], 60)) {
+    respond(429, ['ok' => false, 'error' => 'rate_limited']);
+}
+
+$name = strtolower(trim((string) ($_GET['name'] ?? '')));
+if (!preg_match('/^(?!-)[a-z0-9-]{1,63}(?<!-)$/', $name)) {
+    respond(422, ['ok' => false, 'error' => 'invalid_name']);
+}
+
+try {
+    $prices = cached('prices', (int) $config['price_cache_seconds'], fn () => rp_prices($config));
+
+    // The requested TLD (if offered) comes first, then the popular ones as alternatives.
+    $requested = array_filter(array_map('trim', explode(',', strtolower((string) ($_GET['tlds'] ?? '')))));
+    $wanted = array_merge($requested, $config['default_tlds']);
+    $tlds = array_slice(array_values(array_unique(array_filter($wanted, fn ($t) => isset($prices[$t])))), 0, 12);
+    if (!$tlds) {
+        respond(422, ['ok' => false, 'error' => 'invalid_tld']);
+    }
+
+    sort($tlds);
+    $statuses = cached("check|$name|" . implode(',', $tlds), (int) $config['check_cache_seconds'], fn () => rp_check($config, $name, $tlds));
+} catch (RuntimeException $e) {
+    respond(502, ['ok' => false, 'error' => $e->getMessage()]);
+}
+
+// Keep the requested TLD first in the response.
+usort($tlds, fn ($a, $b) => [in_array($a, $requested, true) ? 0 : 1, array_search($a, $config['default_tlds'])]
+    <=> [in_array($b, $requested, true) ? 0 : 1, array_search($b, $config['default_tlds'])]);
 
 $results = [];
 foreach ($tlds as $tld) {
@@ -151,9 +172,11 @@ foreach ($tlds as $tld) {
         'domain' => $domain,
         'tld' => $tld,
         'available' => $statuses[$tld] ?? null,
-        'price' => $config['tld_prices'][$tld],
-        'currency' => $config['currency'],
-        'registerUrl' => str_replace('{domain}', rawurlencode($domain), (string) $config['order_url']),
+        'price' => $prices[$tld]['price'],
+        'regularPrice' => $prices[$tld]['regular'],
+        'promo' => $prices[$tld]['promo'],
+        'currency' => 'USD',
+        'registerUrl' => str_replace('{name}', rawurlencode($name), (string) $config['order_url']),
     ];
 }
 

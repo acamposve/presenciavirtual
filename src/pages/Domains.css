@@ -71,6 +71,12 @@
   color: #6b7785;
 }
 
+.domains-price-old {
+  color: #6b7785;
+  font-size: 0.85rem;
+  margin-right: 0.4rem;
+}
+
 .domains-empty {
   text-align: center;
 }

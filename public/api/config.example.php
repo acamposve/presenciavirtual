@@ -1,26 +1,17 @@
 <?php
-// Copy to config.php on the server and fill in the values. config.php is git-ignored.
+// Copy to config.php on the server and fill in the password. config.php is git-ignored.
 return [
-    // Hostname issued in your ResellersPanel Reseller Control Panel (API section).
-    'api_url' => 'https://YOUR-RESELLERSPANEL-API-HOST',
-    'api_username' => 'your-store-name',
-    'api_password' => 'your-api-password',
+    'api_url' => 'https://api.duoservers.com',
+    'api_username' => 'pvirtual',
+    'api_password' => 'YOUR-RESELLER-PASSWORD',
 
-    // Where the "Register" button sends the customer. {domain} is replaced (URL-encoded).
-    'order_url' => 'https://YOUR-RESELLERSPANEL-ORDER-FORM/?domain={domain}',
+    // Where the "Register" button sends the customer. {name} is replaced (URL-encoded).
+    'order_url' => 'https://pvirtual.duoservers.com/dominios/resultados/?sld={name}',
 
-    'currency' => 'USD',
-    // Allow-list of TLDs and the yearly price shown to visitors.
-    'tld_prices' => [
-        'com' => 14.99,
-        'net' => 16.99,
-        'org' => 15.99,
-        'io' => 49.99,
-        'uy' => 40.00,
-        'com.uy' => 35.00,
-    ],
-    'default_tlds' => ['com', 'net', 'org', 'com.uy'],
+    // Shown first / used as alternatives. Only TLDs the store offers are used.
+    'default_tlds' => ['com', 'net', 'org', 'io', 'info'],
 
-    'cache_seconds' => 300,
+    'price_cache_seconds' => 3600,
+    'check_cache_seconds' => 60,
     'rate_limit_per_minute' => 20,
 ];

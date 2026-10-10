@@ -72,6 +72,7 @@ function Domains() {
                       {r.available === true ? s.available : r.available === false ? s.taken : s.unknown}
                     </span>
                     <span className="domains-price">
+                      {r.promo && <s className="domains-price-old">{formatPrice(r.regularPrice, r.currency)}</s>}
                       {formatPrice(r.price, r.currency)}<small>{s.perYear}</small>
                     </span>
                     {r.available === true && (

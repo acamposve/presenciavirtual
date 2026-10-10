@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import './DomainSearch.css'
 
-const POPULAR_TLDS = ['.com', '.net', '.org', '.uy', '.com.uy']
+const POPULAR_TLDS = ['.com', '.net', '.org', '.io', '.info']
 
 // Accepts "name" or "name.tld"; returns null when the input is not a valid domain name.
 export function parseDomainQuery(raw) {
