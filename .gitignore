@@ -11,6 +11,11 @@ build
 .env.local
 .env.*.local
 
+# API credentials
+public/api/config.php
+resellerspanel.md
+ResellersPanelAPI.pdf
+
 # IDE
 .vscode
 .idea

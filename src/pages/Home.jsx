@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
+import DomainSearch from '../components/DomainSearch'
 import './Home.css'
 
 function Home() {
@@ -14,6 +15,7 @@ function Home() {
           <div className="hero-content">
             <h1>{t.home.heroTitle}</h1>
             <p>{t.home.heroSubtitle}</p>
+            <DomainSearch variant="hero" />
             <div className="hero-buttons">
               <Link to="/contact" className="btn btn-primary">{t.home.ctaContact}</Link>
               <Link to="/services" className="btn btn-secondary">{t.home.ctaServices}</Link>

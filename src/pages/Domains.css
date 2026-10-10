@@ -1,0 +1,91 @@
+.domains-results {
+  max-width: 820px;
+}
+
+.domains-status {
+  text-align: center;
+  color: var(--ink);
+}
+
+.domains-status-error {
+  color: #b42318;
+}
+
+.domains-query {
+  color: var(--accent-dark);
+}
+
+.domains-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.domains-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.2rem;
+  background: #fff;
+  border: 1px solid #e3e8ee;
+  border-radius: 12px;
+}
+
+.domains-row-exact {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(14, 165, 165, 0.15);
+}
+
+.domains-name {
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.domains-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+}
+
+.domains-badge-ok {
+  background: #d9f5ec;
+  color: #0b6b4d;
+}
+
+.domains-badge-no {
+  background: #fde4e1;
+  color: #b42318;
+}
+
+.domains-badge-unknown {
+  background: #eef0f3;
+  color: #4a5568;
+}
+
+.domains-price small {
+  color: #6b7785;
+}
+
+.domains-price-old {
+  color: #6b7785;
+  font-size: 0.85rem;
+  margin-right: 0.4rem;
+}
+
+.domains-empty {
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .domains-row {
+    grid-template-columns: 1fr auto;
+  }
+  .domains-name {
+    grid-column: 1 / -1;
+  }
+}
