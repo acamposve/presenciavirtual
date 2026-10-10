@@ -105,7 +105,34 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - Behavior when the API is down: every endpoint error has an ES/EN message, and `available: null` renders as "could not verify" with a contact fallback.
 - Responsiveness: checked by eye at 360/768/1200 px; accessibility still needs a pass with a screen reader and keyboard only.
 - Still open on the server, and the real launch blockers: `public/.htaccess` must be uploaded, `public/api/config.php` must exist with the live credentials, and `/api/domain-check.php` must answer. `public/api/ping.php` tells which of the three is missing.
-- `npm run build`, then deploy `dist/` together with the PHP files. The FTP workflow uploads `dist/` only, so anything that lives in `public/` reaches the server through the build.
+- Deployment is by hand, for the reason and the steps recorded under `## Deploy` below.
+
+## Deploy
+
+Publishing is manual. The hosting refuses FTP connections from CI runners, so the
+GitHub Actions deploy step uploaded to a directory that never served the domain
+while reporting success. The workflow was removed instead of left pretending.
+
+1. On `main`, run `npm run verify` (i18n parity, tests and the production build).
+2. Upload the **whole** `dist/` tree into the domain's Document Root
+   (`public_html/`), keeping the layout: `.htaccess`, `robots.txt`,
+   `sitemap.xml`, `assets/`, the images and `api/`. Everything that lives in
+   `public/` reaches the server through the build, so `dist/api/config.php`
+   (git-ignored, holds the live credentials) is part of the upload: keep `dist/`
+   private and never publish or share it.
+3. Verify from outside, in this order:
+   - `/api/ping.php` -> `config_present: true`. A 404 means `api/` did not
+     arrive; `false` means `config.php` is missing. The endpoint reports which.
+   - `/api/domain-check.php?name=presenciavirtual` -> 200 with `results` and prices.
+   - `/domains?q=presenciavirtual.com` -> the results page with real prices.
+   - `/domains` typed directly -> the app, not a 404: proof the front controller runs.
+   - `/api/config.php` -> 403: proof `api/.htaccess` is enforced.
+4. If deep links still 404, the host is not applying the `.htaccess`: check
+   `AllowOverride`, `mod_rewrite`, and the `Options +FollowSymLinks` the rewrite
+   engine needs in per-directory context.
+5. Line endings: `.gitattributes` forces LF on `.htaccess` and `*.php` because a
+   Windows working tree hands the upload CRLF, which Apache can misread. If a
+   file misbehaves only after uploading, check this before anything else.
 
 ## Risks
 - API credentials must never reach the client or the repo. They currently live in `public/api/config.php`, which is gitignored but is copied into `dist/` by the build, so every deploy artifact contains them.
