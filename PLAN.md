@@ -92,9 +92,16 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - Plan names (`Starter`, `Business`, `Pro`) are product names, so they are identical in `es` and `en`.
 - The three cards use `FeatureCard` (its first real consumer of `price`/`items`/`children`), grouped in `.hosting-grid` (three fixed columns; `.grid-3` is `auto-fit` and would fit a fourth card).
 
-## Phase 4: Web development page
+## Phase 4: Web development page — implemented (case studies still missing)
 - Offering tiers (corporate site, e-commerce, web app), process steps (discovery, design, build, launch), stack used.
 - Case-study placeholders; CTA to the contact form.
+
+**Implementation notes (as built)**
+- `src/pages/WebDevelopment.jsx` is its own page now: it no longer renders `ServicePage` (which is still used by `/ai-consulting`). Sections, in order: hero without `badge` (`PageHero`), tiers, process, stack, case studies, CTA. Styles live in `src/pages/WebDevelopment.css` (new).
+- Tiers and process reuse `FeatureCard` and `src/i18n/sections/webDevelopment.js`. The three tiers are the existing `highlights`, unchanged; the process is the new `process` array in both languages.
+- **Stack: no technology was invented.** `stack` lists only capabilities already published in `src/i18n/sections/services.js` (`APIs`, `Integrations`, `Automation`, `Cloud architecture`, `Security`, `Observability`). No language, framework or vendor is named — not even the ones the site is actually built with (React, Vite) — because naming them would state something about the service that nobody has confirmed. The section links back to `/services` (`stackLink`) instead of repeating the pillars, which Phase 5 also asks for the AI page. If the stack should name real technologies, the owner has to publish them first.
+- **Missing product data, still to be filled in (no component change needed):** case studies. `cases.items` in `src/i18n/sections/webDevelopment.js` is empty in both languages, and the page renders the `casesPending` note ("Estamos preparando los primeros casos de estudio…") instead of the grid. The cards appear on their own as soon as `items` has entries, each with `{ title, desc }`; `cases.title` / `cases.subtitle` are the section headings. `check:i18n` compares arrays index by index, so entries must be added to `es` and `en` in the same order and the same number. While `items` is empty, no card is rendered: an empty grid or an invented client would both be worse than the note.
+- The page carries no plans and no prices: its only CTA is the `/contact` form, same as the other service pages.
 
 ## Phase 5: AI consulting page
 - Reuse existing AI messaging (agents, RAG, document intelligence).
