@@ -77,10 +77,20 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - `npm run verify` runs `check:i18n` (ES/EN key-tree parity across every section), `npm test` and the production build.
 - `tests/domain.test.mjs` covers the input parser and the alternative-TLD helper, including IDN, two-level TLDs and length boundaries.
 
-## Phase 3: Hosting page
+## Phase 3: Hosting page — implemented (product data still missing)
 - Plan comparison cards (e.g. Starter, Business, Pro) with monthly/annual toggle.
 - Feature lists in ES and EN; CTA links to the ResellersPanel order flow.
 - Link to the domain search for bundling a domain with hosting.
+
+**Implementation notes (as built)**
+- The plan numbers and the order links live in `src/data/hostingPlans.js` (not in i18n: a price is not a translation). `src/utils/pricing.js` holds the pure rules and `tests/pricing.test.mjs` covers them.
+- **Missing product data, still to be filled in (no component change needed):**
+  - Real prices: `priceMonthly` / `priceAnnual` per plan in `src/data/hostingPlans.js`. Until then both are `0`, and `0` is rendered as the `plans.pricePending` copy ("Precio a confirmar" / "Price to be confirmed"), never as `$0`: the plan button leads to a real order flow, so a published zero would read as "free". Setting the figures is enough to make the page show the formatted USD amount.
+  - Features: `plans.items.<plan>.features` in `src/i18n/sections/hosting.js`, empty in both languages. An empty array renders a single `plans.featuresPending` line ("Detalles del plan a confirmar" / "Plan details to be confirmed"). No feature was invented: each bullet is a claim about the service.
+  - Order URL: `orderUrl` per plan in `src/data/hostingPlans.js`, empty today. With `''` the card button is a `<Link to="/contact">` with the `plans.orderWithoutUrl` label; with a value it becomes an `<a href target="_blank" rel="noopener noreferrer">` with the `plans.order` label, same pattern as `registerUrl` in `src/pages/Domains.jsx`. No ResellersPanel URL was invented.
+- The page keeps the `badge` "Próximamente" / "Coming soon" while the prices are unpublished; see the open question in `project-work/presenciavirtual/project-state.md`.
+- Plan names (`Starter`, `Business`, `Pro`) are product names, so they are identical in `es` and `en`.
+- The three cards use `FeatureCard` (its first real consumer of `price`/`items`/`children`), grouped in `.hosting-grid` (three fixed columns; `.grid-3` is `auto-fit` and would fit a fourth card).
 
 ## Phase 4: Web development page
 - Offering tiers (corporate site, e-commerce, web app), process steps (discovery, design, build, launch), stack used.
