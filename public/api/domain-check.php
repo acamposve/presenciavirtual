@@ -176,6 +176,17 @@ try {
 
     // The requested TLD (if offered) comes first, then the popular ones as alternatives.
     $requested = array_filter(array_map('trim', explode(',', strtolower((string) ($_GET['tlds'] ?? '')))));
+
+    // A request that names TLDs is a request about those domains. Silently
+    // dropping the ones the store does not sell and answering with the popular
+    // TLDs instead reported on another domain entirely (asking for
+    // "blog.miempresa.com" got confident availability data for "blog.com"), so
+    // an explicit request with nothing sellable in it is an error, not a
+    // fallback. A bare name (no `tlds`) still searches the popular TLDs.
+    if ($requested && !array_filter($requested, fn (string $t): bool => isset($prices[$t]))) {
+        respond(422, ['ok' => false, 'error' => 'invalid_tld']);
+    }
+
     $wanted = array_merge($requested, $config['default_tlds']);
     $tlds = array_slice(array_values(array_unique(array_filter($wanted, fn ($t) => isset($prices[$t])))), 0, 12);
     if (!$tlds) {

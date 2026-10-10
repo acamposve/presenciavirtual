@@ -1,0 +1,59 @@
+# Presencia Virtual — Apache configuration for the deployed site.
+#
+# Why this file exists: the site is a client-side React app (React Router). On a
+# direct visit to /domains, /hosting, /contact... Apache looks for a file at that
+# path, finds nothing, and answers 404 before React ever loads. The front
+# controller below serves index.html for any path that is not a real file or
+# directory, so deep links and page reloads work.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # If the site is ever served from a subdirectory instead of the domain root,
+  # set the prefix here (e.g. RewriteBase /sitio/) and, in vite.config.js, set
+  # base to the same prefix so the asset URLs match.
+  RewriteBase /
+
+  # Real files and directories (assets, /api/*.php, images) are served as-is.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else goes to the app, which resolves the route client-side, with
+  # two exceptions: a path that names a file extension (a missing asset) and
+  # anything under /api/ must not become the HTML shell. Serving index.html for
+  # them would answer 200 text/html where the caller expects an image, a script
+  # or JSON: it hides a missing PHP endpoint behind HTML, breaks the diagnostic
+  # in public/api/ping.php (which reads the 404 as "the /api/ directory never
+  # reached the server") and creates indexable soft-404s. Both fall through to
+  # Apache's real 404 instead. /api/ is matched unanchored so this still holds if
+  # the site is served from a subdirectory (see RewriteBase above).
+  RewriteCond %{REQUEST_URI} !/api/ [NC]
+  RewriteCond %{REQUEST_URI} !\.[a-z0-9]{1,6}$ [NC]
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# Optional: force HTTPS. Enable only if the certificate is already installed and
+# the site is not behind a proxy that terminates TLS, otherwise it can loop.
+# <IfModule mod_rewrite.c>
+#   RewriteCond %{HTTPS} !=on
+#   RewriteCond %{HTTP:X-Forwarded-Proto} !https
+#   RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# </IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Vite fingerprints the asset filenames, so they can be cached forever.
+  <FilesMatch "\.(js|css|woff2?|svg|png|jpe?g|webp|ico)$">
+    ExpiresDefault "access plus 1 year"
+  </FilesMatch>
+  # Always revalidate the HTML shell so a new deploy is picked up immediately,
+  # because it references the new hashed asset names.
+  <FilesMatch "\.html$">
+    ExpiresDefault "access plus 0 seconds"
+  </FilesMatch>
+</IfModule>

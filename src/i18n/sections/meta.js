@@ -36,6 +36,10 @@ export const meta = {
       title: 'Contacto — Presencia Virtual',
       description: 'Contanos tu proyecto. Atendemos desde Montevideo, Uruguay, a clientes de cualquier país.',
     },
+    notFound: {
+      title: 'Página no encontrada — Presencia Virtual',
+      description: 'La página que buscás no existe o cambió de dirección.',
+    },
   },
   en: {
     home: {
@@ -73,6 +77,10 @@ export const meta = {
     contact: {
       title: 'Contact — Presencia Virtual',
       description: 'Tell us about your project. Based in Montevideo, Uruguay, serving clients in any country.',
+    },
+    notFound: {
+      title: 'Page not found — Presencia Virtual',
+      description: 'The page you are looking for does not exist or has moved.',
     },
   },
 }

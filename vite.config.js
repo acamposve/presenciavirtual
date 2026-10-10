@@ -1,8 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const MOCK_PRICES = { com: 14.99, net: 15.49, org: 15.99, io: 46.99, info: 4.99 }
+// Mock prices for local development, kept in step with the live store
+// (ResellersPanel, USD, 12 months) so the dev UI matches production.
+const MOCK_PRICES = { com: 14.99, net: 15.49, org: 15.99, io: 67.99, info: 27.99 }
 const MOCK_DEFAULT = ['com', 'net', 'org', 'io', 'info']
+
+// Mirrors the name rule the real endpoint enforces for a single label.
+const MOCK_NAME = /^(?!-)[a-z0-9-]{1,63}(?<!-)$/
 
 // The dev server cannot run PHP, so it answers /api/domain-check with fake data.
 // Names containing "taken" (or shorter than 5 chars) are reported as registered.
@@ -13,12 +18,20 @@ function mockDomainApi() {
       server.middlewares.use('/api/domain-check.php', (req, res) => {
         const url = new URL(req.url, 'http://localhost')
         const name = (url.searchParams.get('name') || '').toLowerCase()
-        const asked = (url.searchParams.get('tlds') || '').split(',').filter((t) => MOCK_PRICES[t])
+        const raw = url.searchParams.get('tlds') || ''
+        const requested = raw.split(',').map((t) => t.trim()).filter(Boolean)
+        const asked = requested.filter((t) => MOCK_PRICES[t])
         const tlds = [...new Set([...asked, ...MOCK_DEFAULT])]
         res.setHeader('Content-Type', 'application/json')
-        if (!/^(?!-)[a-z0-9-]{1,63}(?<!-)$/.test(name)) {
+        if (!MOCK_NAME.test(name)) {
           res.statusCode = 422
           return res.end(JSON.stringify({ ok: false, error: 'invalid_name' }))
+        }
+        // Same rule as the real endpoint: asking for TLDs the store does not
+        // sell must not silently answer about the popular ones instead.
+        if (requested.length && !asked.length) {
+          res.statusCode = 422
+          return res.end(JSON.stringify({ ok: false, error: 'invalid_tld' }))
         }
         setTimeout(() => {
           const results = tlds.map((tld, i) => ({

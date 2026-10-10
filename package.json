@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint src --ext .jsx,.js"
+    "test": "node --test --experimental-test-isolation=none \"tests/**/*.test.mjs\"",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "verify": "npm run check:i18n && npm test && npm run build"
   },
   "dependencies": {
     "react": "^18.2.0",

@@ -81,11 +81,70 @@
   text-align: center;
 }
 
+.domains-alternatives {
+  margin-top: 1.5rem;
+  padding: 1.2rem 1.4rem;
+  background: var(--bg-alt);
+  border: 1px solid #e3e8ee;
+  border-left: 4px solid var(--accent);
+  border-radius: 12px;
+}
+
+.domains-alternatives h3 {
+  margin-bottom: 0.35rem;
+  font-size: 1.15rem;
+}
+
+.domains-alternatives-text {
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+}
+
+.domains-alternatives-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.domains-alternatives-list li {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0.9rem;
+  background: #fff;
+  border: 1px solid #e3e8ee;
+  border-radius: 10px;
+}
+
+.domains-alternatives-name {
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.domains-alternatives-price {
+  font-weight: 600;
+}
+
+.domains-alternatives-price small {
+  color: var(--muted);
+  font-weight: 400;
+}
+
 @media (max-width: 640px) {
   .domains-row {
     grid-template-columns: 1fr auto;
   }
   .domains-name {
+    grid-column: 1 / -1;
+  }
+  .domains-alternatives-list li {
+    grid-template-columns: 1fr auto;
+  }
+  .domains-alternatives-name {
     grid-column: 1 / -1;
   }
 }
