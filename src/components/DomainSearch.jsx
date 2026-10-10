@@ -1,25 +1,10 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
+import { parseDomainQuery } from '../utils/domain'
 import './DomainSearch.css'
 
 const POPULAR_TLDS = ['.com', '.net', '.org', '.io', '.info']
-
-// Accepts "name" or "name.tld"; returns null when the input is not a valid domain name.
-export function parseDomainQuery(raw) {
-  const cleaned = String(raw || '')
-    .trim()
-    .toLowerCase()
-    .replace(/^https?:\/\//, '')
-    .replace(/^www\./, '')
-    .split(/[/?#]/)[0]
-  if (!cleaned) return null
-  const [name, ...rest] = cleaned.split('.')
-  const tld = rest.join('.')
-  if (!/^(?!-)[a-z0-9-]{1,63}(?<!-)$/.test(name)) return null
-  if (tld && !/^[a-z]{2,10}(\.[a-z]{2,10})?$/.test(tld)) return null
-  return { name, tld }
-}
 
 function DomainSearch({ variant = 'page', initialValue = '' }) {
   const { t } = useLanguage()

@@ -10,6 +10,7 @@ import { webDevelopment } from './sections/webDevelopment'
 import { aiConsulting } from './sections/aiConsulting'
 import { contact } from './sections/contact'
 import { footer } from './sections/footer'
+import { notFound } from './sections/notFound'
 
 const sections = {
   nav,
@@ -24,6 +25,7 @@ const sections = {
   aiConsulting,
   contact,
   footer,
+  notFound,
 }
 
 function build(lang) {

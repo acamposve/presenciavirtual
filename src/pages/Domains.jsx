@@ -3,7 +3,8 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import PageHero from '../components/PageHero'
 import FeatureCard from '../components/FeatureCard'
-import DomainSearch, { parseDomainQuery } from '../components/DomainSearch'
+import DomainSearch from '../components/DomainSearch'
+import { availableAlternatives, parseDomainQuery } from '../utils/domain'
 import './Domains.css'
 
 function formatPrice(price, currency) {
@@ -39,8 +40,13 @@ function Domains() {
       .then((results) => setState({ status: 'done', results, error: '' }))
       .catch((err) => {
         if (err.name === 'AbortError') return
-        const known = s.errors[err.message] ? err.message : 'network'
-        setState({ status: 'error', results: [], error: s.errors[known] })
+        // Any error key the API can return is in s.errors; a transport failure
+        // (or a key we have not translated yet) falls back to the network text.
+        setState({
+          status: 'error',
+          results: [],
+          error: s.errors[err.message] || s.errors.network,
+        })
       })
 
     return () => controller.abort()
@@ -49,6 +55,7 @@ function Domains() {
   }, [parsedKey, s])
 
   const exact = parsed?.tld ? `${parsed.name}.${parsed.tld}` : null
+  const alternatives = state.status === 'done' ? availableAlternatives(state.results, exact) : []
 
   return (
     <div className="service-page domains-page">
@@ -84,6 +91,23 @@ function Domains() {
                   </li>
                 ))}
               </ul>
+              {alternatives.length > 0 && (
+                <div className="domains-alternatives">
+                  <h3>{s.alternativesTitle}</h3>
+                  <p className="domains-alternatives-text">{s.alternativesText}</p>
+                  <ul className="domains-alternatives-list">
+                    {alternatives.slice(0, 3).map((r) => (
+                      <li key={r.domain}>
+                        <span className="domains-alternatives-name">{r.domain}</span>
+                        <span className="domains-alternatives-price">
+                          {formatPrice(r.price, r.currency)}<small>{s.perYear}</small>
+                        </span>
+                        <a className="btn btn-primary btn-sm" href={r.registerUrl} target="_blank" rel="noopener noreferrer">{s.register}</a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </>
           )}
 

@@ -53,14 +53,28 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 
 **Implementation notes (as built)**
 - ResellersPanel API (official PDF v2.4.1), host `https://api.duoservers.com`, store `pvirtual`: single endpoint with `auth_username`/`auth_password`. Serialized responses are wrapped under index `1`.
-- **Adapter assumptions (unverified parsing, pending a live call):** the response shapes below were read from the API documentation and from the serializer wrapper, but have **not** been confirmed against the live API (the PR that added this had no credentials). Treat them as assumptions until one real call is recorded, and re-check before relying on them:
-  - `domains/check` returns `result: { tld: 1|0 }` — assumed `1` = registered, `0` = available; TLDs the store does not sell are assumed to be omitted from the result.
-  - `products/get_registerdomains` is assumed to return offered TLDs keyed by TLD with `prices` for a 12-month period, plus a `promotions` list where `promo_type` is `register`.
-  - These two sub-field names are undocumented, so `rp_prices()` / `rp_check()` parse tolerantly and a wrong guess surfaces as a wrong price or an `available: null` result rather than a hard error.
+- **Verified against the live API (store `pvirtual`, USD):** the response shapes below were confirmed with real calls, so the earlier "unverified parsing" caveat no longer applies:
+  - `domains/check` returns `result: [tld => 0|1]` where **1 = registered, 0 = available**; a TLD the store does not sell (e.g. `uy`) is omitted from `result` entirely.
+  - `products/get_registerdomains` returns 167 TLDs keyed by name (`academy`, `com`, ...), each with a scalar 12-month `prices` value once `currencies[]=USD&periods[]=12` is sent (without `periods` it returns a `period_NN` map instead), plus a `promotions` array whose entries carry `promo_type` (`register`), `price_type`, `period` (`12`) and a `prices` string.
+  - Multi-level keys in `registerdomains` are `_`-separated (`com_uy`) and are converted to dotted TLDs.
+  - Prices move: `.org` was 15.99 and `.io` 67.99 when this was verified, so treat `vite.config.js` MOCK_PRICES and any figure below as snapshots, not constants.
 - Prices come from the API (cached 1h; first-year promo price shown with the regular price struck through). `.uy` / `.com.uy` are not offered by the store, so they are not shown.
-- "Register" links to the store's own search page: `https://pvirtual.duoservers.com/dominios/resultados/?sld={name}` (takes the name only and runs its own search). Configurable via `order_url`.
+- "Register" links to the store's own search page: `https://pvirtual.duoservers.com/dominios/resultados/?sld={name}` (takes the name only and runs its own search). Configurable via `order_url`. The placeholder is `{name}`, not `{domain}`.
+- Search input accepts a name or a full domain, with or without scheme, `www.`, path, port or a trailing dot, and in Unicode or punycode: `cafe.com` typed with an accent is normalised to its punycode form before it reaches the API, which only accepts ASCII. A bare name searches the popular TLDs, and `miempresa.com.uy` is read as name `miempresa` + TLD `com.uy`.
+- Every error the endpoint can return has an ES/EN message (`network`, `rate_limited`, `invalid_name`, `invalid_tld`, `no_tlds`, `not_configured`, `upstream_unreachable`, `upstream_error`, `generic`); an unknown key falls back to the network text.
+- When the requested domain is taken, the results page lists up to three available alternatives for the same name with price and register link.
 - Chips under the hero bar are informational only (no prices, not clickable).
 - Dev: `vite.config.js` mocks `/api/domain-check.php` (names containing "taken" are reported as registered).
+
+**Routing and deployment files (required, not optional)**
+- `public/.htaccess` is the front controller: it serves real files and directories (`/assets/*`, `/api/*.php`, images) and sends every other path to `index.html`. Without it the host answers 404 for `/domains`, `/hosting`, `/contact` and every other deep link, because Apache looks for a file that does not exist. If the site is ever served from a subdirectory, set `RewriteBase` there and `base` in `vite.config.js` to the same prefix.
+- `public/api/ping.php` is a diagnostic endpoint: it reports whether the config file is present and readable, plus PHP/OpenSSL/`allow_url_fopen`/`flock` availability, and never returns credentials. Compare it with `domain-check.php` to tell "the `/api/` directory never reached the server" (both 404) from "the config is missing" (ping 200 with `config_present: false`) or "the registrar is failing upstream".
+- `src/pages/NotFound.jsx` renders for unknown routes, so a mistyped URL shows a way back instead of a blank page; `RouteMeta` falls back to the `notFound` title for those paths.
+- `public/robots.txt` and `public/sitemap.xml` cover the public routes; keep the sitemap in step with `src/App.jsx`.
+
+**Tests and checks**
+- `npm run verify` runs `check:i18n` (ES/EN key-tree parity across every section), `npm test` and the production build.
+- `tests/domain.test.mjs` covers the input parser and the alternative-TLD helper, including IDN, two-level TLDs and length boundaries.
 
 ## Phase 3: Hosting page
 - Plan comparison cards (e.g. Starter, Business, Pro) with monthly/annual toggle.
@@ -86,14 +100,17 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - All Home domain-search strings (headline, placeholder, button, TLD chips, validation errors) in both `es` and `en`.
 
 ## Phase 8: QA and launch
-- Script to verify the `es` and `en` translation key trees match.
-- Test responsiveness, accessibility, and behavior when the API is down.
-- Test against ResellersPanel sandbox/test mode if available.
-- `npm run build`, then deploy `dist/` together with the PHP files.
+- Translation key parity: done, as `npm run check:i18n` (plus `npm test` and the build under `npm run verify`).
+- Behavior when the API is down: every endpoint error has an ES/EN message, and `available: null` renders as "could not verify" with a contact fallback.
+- Responsiveness: checked by eye at 360/768/1200 px; accessibility still needs a pass with a screen reader and keyboard only.
+- Still open on the server, and the real launch blockers: `public/.htaccess` must be uploaded, `public/api/config.php` must exist with the live credentials, and `/api/domain-check.php` must answer. `public/api/ping.php` tells which of the three is missing.
+- `npm run build`, then deploy `dist/` together with the PHP files. The FTP workflow uploads `dist/` only, so anything that lives in `public/` reaches the server through the build.
 
 ## Risks
-- API credentials must never reach the client or the repo.
-- `.uy` domains have local-registry rules and may need manual handling.
-- Domain search needs rate limiting and caching to prevent abuse and slowness.
+- API credentials must never reach the client or the repo. They currently live in `public/api/config.php`, which is gitignored but is copied into `dist/` by the build, so every deploy artifact contains them.
+- `.uy` domains have local-registry rules and may need manual handling; the store does not sell them, so they are simply absent from results.
+- Domain search needs rate limiting and caching to prevent abuse and slowness (both implemented; the rate limiter holds one exclusive lock across read/check/write).
 - Terms, refund and privacy pages are needed before selling hosting and domains.
-- Pricing must be kept in sync with ResellersPanel.
+- Pricing must be kept in sync with ResellersPanel: the API is the source of truth at runtime (1 h cache), but the dev mock and any figure written in docs go stale.
+- The contact form has no rate limiting and no CAPTCHA beyond a honeypot, and it does not log a failed `mail()`.
+- Routing depends on `public/.htaccess`; without it every route except `/` returns 404.

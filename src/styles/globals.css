@@ -131,6 +131,11 @@ a:hover {
   background-color: var(--border-color);
 }
 
+.btn-sm {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+}
+
 /* Contenedores */
 .container {
   max-width: 1200px;

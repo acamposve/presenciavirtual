@@ -11,6 +11,7 @@ const ROUTE_META_KEYS = {
   '/web-development': 'webDevelopment',
   '/ai-consulting': 'aiConsulting',
   '/contact': 'contact',
+  '/404': 'notFound',
 }
 
 const SITE_URL = 'https://presenciavirtual.net'
@@ -30,7 +31,10 @@ function RouteMeta() {
   const { t, language } = useLanguage()
 
   useEffect(() => {
-    const key = ROUTE_META_KEYS[pathname.replace(/\/+$/, '') || '/']
+    const path = pathname.replace(/\/+$/, '') || '/'
+    // Unknown paths fall back to the 404 metadata: App renders NotFound for
+    // them, so the title and description have to match what is on screen.
+    const key = ROUTE_META_KEYS[path] ?? 'notFound'
     const meta = t.meta[key] ?? t.meta.home
 
     document.title = meta.title

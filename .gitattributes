@@ -1,0 +1,23 @@
+# Normalise line endings in the repository itself. This matters for more than
+# tidiness: the FTP deploy uploads the *working tree*, and with core.autocrlf=true
+# on Windows a checkout can turn these files into CRLF. Apache can misread a
+# CRLF .htaccess, and CRLF in the PHP endpoints is a needless difference from
+# what was tested.
+* text=auto eol=lf
+
+# Apache configuration must be LF, without exception.
+.htaccess text eol=lf
+
+# PHP files are served as-is by the host; keep them exactly as committed.
+*.php text eol=lf
+
+# Binary assets: never touch.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.ico binary
+*.webp binary
+*.pdf binary
+*.zip binary
+*.woff binary
+*.woff2 binary
