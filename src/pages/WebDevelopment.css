@@ -1,0 +1,126 @@
+/* Web development page. Sibling of WebDevelopment.jsx, same pattern as
+   Hosting.css / Domains.css, and it only uses the variables from
+   src/styles/globals.css. */
+
+/* Same `.section-subtitle` treatment as Hosting.css, scoped to this page so it
+   does not restyle the shared class used by Services and this page's sections. */
+.web-development-page .section-subtitle {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin-top: -0.5rem;
+}
+
+/* The cases grid needs top spacing from its heading; the tiers grid keeps the
+   global `.grid-3` gap and the `mb-4` on its own heading. */
+.web-development-page .grid {
+  margin-top: 2rem;
+}
+
+/* Process steps: a semantic `<ol>` because the order is the meaning, with its
+   browser markers replaced by the numbered badge in each card. */
+.web-development-steps {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.web-development-step {
+  position: relative;
+  padding: 2.5rem 1.5rem 1.5rem;
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+}
+
+.web-development-step h3 {
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  font-size: 1.15rem;
+}
+
+.web-development-step p {
+  color: var(--muted);
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+
+.web-development-step-number {
+  position: absolute;
+  top: 1.25rem;
+  left: 1.5rem;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background-color: var(--accent);
+  color: var(--white);
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Stack chips: same visual language as `.pillar-items` in Services.css, centred
+   because this page lists capabilities instead of a two-column pillar balance. */
+.web-development-stack {
+  list-style: none;
+  padding: 0;
+  margin: 2rem auto 0;
+  max-width: 760px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.web-development-stack li {
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.web-development-stack-link {
+  margin: 1.25rem 0 0;
+}
+
+/* Placeholder for an empty `cases.items`: a quiet note, never an empty card. */
+.web-development-empty {
+  max-width: 640px;
+  margin: 2.5rem auto 0;
+  padding: 1.5rem 1.75rem;
+  background-color: var(--white);
+  border: 1px dashed var(--border-color);
+  border-radius: 0.5rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .web-development-steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .web-development-steps {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .web-development-step {
+    padding: 2.5rem 1.25rem 1.25rem;
+  }
+
+  .web-development-step-number {
+    left: 1.25rem;
+  }
+}
