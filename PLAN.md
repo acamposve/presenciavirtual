@@ -52,7 +52,11 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - Vite proxy for `/api` to a local PHP server, or a mock response for local development.
 
 **Implementation notes (as built)**
-- ResellersPanel API (official PDF v2.4.1), host `https://api.duoservers.com`, store `pvirtual`: single endpoint with `auth_username`/`auth_password`. Verified live: `domains/check` returns `result: { tld: 1|0 }` (1 = registered, 0 = available; TLDs the store does not sell are omitted), and `products/get_registerdomains` returns offered TLDs with 12-month prices and promotions. Serialized responses are wrapped under index `1`.
+- ResellersPanel API (official PDF v2.4.1), host `https://api.duoservers.com`, store `pvirtual`: single endpoint with `auth_username`/`auth_password`. Serialized responses are wrapped under index `1`.
+- **Adapter assumptions (unverified parsing, pending a live call):** the response shapes below were read from the API documentation and from the serializer wrapper, but have **not** been confirmed against the live API (the PR that added this had no credentials). Treat them as assumptions until one real call is recorded, and re-check before relying on them:
+  - `domains/check` returns `result: { tld: 1|0 }` — assumed `1` = registered, `0` = available; TLDs the store does not sell are assumed to be omitted from the result.
+  - `products/get_registerdomains` is assumed to return offered TLDs keyed by TLD with `prices` for a 12-month period, plus a `promotions` list where `promo_type` is `register`.
+  - These two sub-field names are undocumented, so `rp_prices()` / `rp_check()` parse tolerantly and a wrong guess surfaces as a wrong price or an `available: null` result rather than a hard error.
 - Prices come from the API (cached 1h; first-year promo price shown with the regular price struck through). `.uy` / `.com.uy` are not offered by the store, so they are not shown.
 - "Register" links to the store's own search page: `https://pvirtual.duoservers.com/dominios/resultados/?sld={name}` (takes the name only and runs its own search). Configurable via `order_url`.
 - Chips under the hero bar are informational only (no prices, not clickable).

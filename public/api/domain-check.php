@@ -27,19 +27,46 @@ function rate_limited(string $ip, int $max, int $windowSeconds): bool
 {
     $file = sys_get_temp_dir() . '/pv_dc_rl_' . md5($ip);
     $now = time();
-    $hits = [];
-    if (is_file($file)) {
-        $hits = array_filter(
-            array_map('intval', file($file, FILE_IGNORE_NEW_LINES) ?: []),
-            fn (int $ts): bool => $ts > $now - $windowSeconds
-        );
+
+    // c+ creates the file when missing and leaves it writable, so one handle can
+    // hold the lock across the whole read/check/write cycle.
+    $fh = @fopen($file, 'c+');
+    if ($fh === false) {
+        // Fail open: a counter we cannot open must not take the endpoint down.
+        return false;
     }
-    if (count($hits) >= $max) {
-        return true;
+
+    // The lock has to cover the read as well as the write. Locking only the
+    // write lets concurrent requests read the same hit list, all pass the
+    // check, and then overwrite each other's timestamps, which loses hits and
+    // makes the per-IP limit bypassable under load.
+    if (!@flock($fh, LOCK_EX)) {
+        fclose($fh);
+        return false;
     }
-    $hits[] = $now;
-    file_put_contents($file, implode("\n", $hits), LOCK_EX);
-    return false;
+
+    $raw = stream_get_contents($fh);
+    $hits = $raw === false || $raw === '' ? [] : array_filter(
+        array_map('intval', preg_split('/\R/', $raw) ?: []),
+        fn (int $ts): bool => $ts > $now - $windowSeconds
+    );
+
+    $limited = count($hits) >= $max;
+
+    if (!$limited) {
+        $hits[] = $now;
+        // Drop expired hits while we still hold the lock, so the file stays
+        // bounded instead of growing on every request.
+        $payload = implode("\n", $hits);
+        if (rewind($fh) && ftruncate($fh, 0) && fwrite($fh, $payload) !== false) {
+            fflush($fh);
+        }
+    }
+
+    flock($fh, LOCK_UN);
+    fclose($fh);
+
+    return $limited;
 }
 
 // --- ResellersPanel adapter -------------------------------------------------
