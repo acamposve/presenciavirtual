@@ -18,12 +18,20 @@ function mockDomainApi() {
       server.middlewares.use('/api/domain-check.php', (req, res) => {
         const url = new URL(req.url, 'http://localhost')
         const name = (url.searchParams.get('name') || '').toLowerCase()
-        const asked = (url.searchParams.get('tlds') || '').split(',').filter((t) => MOCK_PRICES[t])
+        const raw = url.searchParams.get('tlds') || ''
+        const requested = raw.split(',').map((t) => t.trim()).filter(Boolean)
+        const asked = requested.filter((t) => MOCK_PRICES[t])
         const tlds = [...new Set([...asked, ...MOCK_DEFAULT])]
         res.setHeader('Content-Type', 'application/json')
-        if (!/^(?!-)[a-z0-9-]{1,63}(?<!-)$/.test(name)) {
+        if (!MOCK_NAME.test(name)) {
           res.statusCode = 422
           return res.end(JSON.stringify({ ok: false, error: 'invalid_name' }))
+        }
+        // Same rule as the real endpoint: asking for TLDs the store does not
+        // sell must not silently answer about the popular ones instead.
+        if (requested.length && !asked.length) {
+          res.statusCode = 422
+          return res.end(JSON.stringify({ ok: false, error: 'invalid_tld' }))
         }
         setTimeout(() => {
           const results = tlds.map((tld, i) => ({

@@ -55,7 +55,11 @@ function Domains() {
   }, [parsedKey, s])
 
   const exact = parsed?.tld ? `${parsed.name}.${parsed.tld}` : null
-  const alternatives = state.status === 'done' ? availableAlternatives(state.results, exact) : []
+  // Alternatives only make sense when the requested domain itself is taken and
+  // the API actually reported on it: a bare-name search has no requested domain,
+  // and an available one must not be presented with "that domain is taken".
+  const exactResult = exact ? state.results.find((r) => r.domain === exact) : null
+  const alternatives = exactResult?.available === false ? availableAlternatives(state.results, exact) : []
 
   return (
     <div className="service-page domains-page">
