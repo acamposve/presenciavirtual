@@ -108,6 +108,13 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - Engagement types: audit, roadmap, pilot; CTA to book the free first consultation.
 - Avoid duplicating the Solutions page; link to it or merge the overlap.
 
+**Implementation notes (as built)**
+- `src/pages/AiConsulting.jsx` is its own page now: neither service page renders `ServicePage` anymore. Sections, in order: hero (`PageHero`), engagement types (`engagements` in a 3-step structured `<ol>` with deliverable tags), AI capabilities (`capabilities`: agents, RAG, document intelligence reusing messaging from `services.js`), link to full technical architecture on the Solutions page (`solutionsLink`), engineering principles (pragmatism over hype, privacy & data security, measurable impact), and consultation CTA. Styles live in `src/pages/AiConsulting.css` (new).
+- The three engagement types (Audit, Roadmap, Pilot) match the original scoping with explicit deliverable badges on each step.
+- AI messaging reuses the capabilities published in `src/i18n/sections/services.js` (`AI Agents & Workflows`, `RAG & enterprise assistants`, `Document intelligence`). No external vendor or unconfirmed LLM provider was invented.
+- Avoids duplication with `/services` by providing a direct link (`solutionsLink`) to the full architecture diagram and comprehensive use cases.
+- CTA leads to `/contact` for the free initial consultation.
+
 ## Phase 6: Forms and leads
 - Add a `topic` field (domain, hosting, web, AI) to `contact-send.php` and use it in the email subject.
 - Add a topic selector in `Contact.jsx`, pre-selected via query string from each service page.
