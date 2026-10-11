@@ -1,0 +1,119 @@
+/* AI consulting page. Sibling of AiConsulting.jsx, same pattern as
+   WebDevelopment.css / Hosting.css, using variables from src/styles/globals.css. */
+
+.ai-consulting-page .section-subtitle {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin-top: -0.5rem;
+}
+
+.ai-consulting-page .grid {
+  margin-top: 2rem;
+}
+
+/* Engagement steps: a semantic <ol> representing the 3-stage process. */
+.ai-consulting-steps {
+  list-style: none;
+  padding: 0;
+  margin: 2.5rem 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.ai-consulting-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2.5rem 1.75rem 1.75rem;
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ai-consulting-step:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.ai-consulting-step-number {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.5rem;
+  width: 1.85rem;
+  height: 1.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  color: var(--accent-dark);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.ai-consulting-step-icon {
+  font-size: 2.25rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.ai-consulting-step h3 {
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+}
+
+.ai-consulting-step p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.55;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.ai-consulting-step-deliverable {
+  margin-top: auto;
+  padding-top: 0.85rem;
+  border-top: 1px dashed var(--border-color);
+}
+
+.deliverable-tag {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-dark);
+  display: inline-block;
+  line-height: 1.4;
+}
+
+/* Link back to the comprehensive solutions & architecture page */
+.ai-consulting-solutions-link {
+  margin: 2.5rem 0 0;
+  font-size: 1rem;
+}
+
+.ai-consulting-solutions-link a {
+  font-weight: 500;
+  color: var(--accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.ai-consulting-solutions-link a:hover {
+  color: var(--ink);
+}
+
+@media (max-width: 900px) {
+  .ai-consulting-steps {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .ai-consulting-step {
+    padding: 2rem 1.5rem 1.5rem;
+  }
+}

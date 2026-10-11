@@ -103,10 +103,17 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - **Missing product data, still to be filled in (no component change needed):** case studies. `cases.items` in `src/i18n/sections/webDevelopment.js` is empty in both languages, and the page renders the `casesPending` note ("Estamos preparando los primeros casos de estudio…") instead of the grid. The cards appear on their own as soon as `items` has entries, each with `{ title, desc }`; `cases.title` / `cases.subtitle` are the section headings. `check:i18n` compares arrays index by index, so entries must be added to `es` and `en` in the same order and the same number. While `items` is empty, no card is rendered: an empty grid or an invented client would both be worse than the note.
 - The page carries no plans and no prices: its only CTA is the `/contact` form, same as the other service pages.
 
-## Phase 5: AI consulting page
+## Phase 5: AI consulting page — implemented
 - Reuse existing AI messaging (agents, RAG, document intelligence).
 - Engagement types: audit, roadmap, pilot; CTA to book the free first consultation.
 - Avoid duplicating the Solutions page; link to it or merge the overlap.
+
+**Implementation notes (as built)**
+- `src/pages/AiConsulting.jsx` is its own page now: neither service page renders `ServicePage` anymore. Sections, in order: hero (`PageHero`), engagement types (`engagements` in a 3-step structured `<ol>` with deliverable tags), AI capabilities (`capabilities`: agents, RAG, document intelligence reusing messaging from `services.js`), link to full technical architecture on the Solutions page (`solutionsLink`), engineering principles (pragmatism over hype, privacy & data security, measurable impact), and consultation CTA. Styles live in `src/pages/AiConsulting.css` (new).
+- The three engagement types (Audit, Roadmap, Pilot) match the original scoping with explicit deliverable badges on each step.
+- AI messaging reuses the capabilities published in `src/i18n/sections/services.js` (`AI Agents & Workflows`, `RAG & enterprise assistants`, `Document intelligence`). No external vendor or unconfirmed LLM provider was invented.
+- Avoids duplication with `/services` by providing a direct link (`solutionsLink`) to the full architecture diagram and comprehensive use cases.
+- CTA leads to `/contact` for the free initial consultation.
 
 ## Phase 6: Forms and leads
 - Add a `topic` field (domain, hosting, web, AI) to `contact-send.php` and use it in the email subject.
