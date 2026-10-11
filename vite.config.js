@@ -51,8 +51,27 @@ function mockDomainApi() {
   }
 }
 
+// The dev server cannot run PHP, so it answers /contact-send.php with a mock response.
+function mockContactApi() {
+  return {
+    name: 'mock-contact-api',
+    configureServer(server) {
+      server.middlewares.use('/contact-send.php', (req, res) => {
+        res.setHeader('Content-Type', 'application/json')
+        if (req.method !== 'POST') {
+          res.statusCode = 405
+          return res.end(JSON.stringify({ ok: false, error: 'method_not_allowed' }))
+        }
+        setTimeout(() => {
+          res.end(JSON.stringify({ ok: true }))
+        }, 300)
+      })
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react(), mockDomainApi()],
+  plugins: [react(), mockDomainApi(), mockContactApi()],
   server: {
     port: 3000,
     open: true

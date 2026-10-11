@@ -66,7 +66,7 @@ function Hosting() {
                       {plans.order}
                     </a>
                   ) : (
-                    <Link className="btn btn-secondary hosting-plan-cta" to="/contact">
+                    <Link className="btn btn-secondary hosting-plan-cta" to="/contact?topic=hosting">
                       {plans.orderWithoutUrl}
                     </Link>
                   )}
@@ -101,7 +101,7 @@ function Hosting() {
         <div className="container text-center">
           <h2>{content.ctaTitle}</h2>
           <p>{content.ctaText}</p>
-          <Link to="/contact" className="btn btn-primary mt-3">{content.ctaButton}</Link>
+          <Link to="/contact?topic=hosting" className="btn btn-primary mt-3">{content.ctaButton}</Link>
         </div>
       </section>
     </div>
