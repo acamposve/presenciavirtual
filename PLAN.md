@@ -115,9 +115,17 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - Avoids duplication with `/services` by providing a direct link (`solutionsLink`) to the full architecture diagram and comprehensive use cases.
 - CTA leads to `/contact` for the free initial consultation.
 
-## Phase 6: Forms and leads
+## Phase 6: Forms and leads — implemented
 - Add a `topic` field (domain, hosting, web, AI) to `contact-send.php` and use it in the email subject.
 - Add a topic selector in `Contact.jsx`, pre-selected via query string from each service page.
+
+**Implementation notes (as built)**
+- `public/contact-send.php` validates `topic` against an explicit allowlist (`domain`, `hosting`, `web`, `ai`, and `general` as fallback). The sanitized label is injected into the UTF-8 subject line (`Nuevo mensaje [Tema] — Nombre`) and email body.
+- Pure rules extracted to `src/utils/contact.js` (`VALID_TOPICS` and `resolveTopic`), covered by `tests/contact.test.mjs`. The test suite asserts that PHP `$valid_topics`, frontend `VALID_TOPICS`, and i18n dictionary keys match 100%, and verifies that all service CTAs pass valid parameters.
+- `src/pages/Contact.jsx` uses `useSearchParams()` to read `?topic=...`, defaulting safely to `general` if omitted or unknown. The `<select>` element is populated from `t.contact.topics` and resets to the initial query topic upon submission.
+- Form styles in `src/pages/Contact.css` include `<select>` with consistent borders, focus rings, background colors, and disabled states.
+- Service pages (`Domains.jsx`, `Hosting.jsx`, `WebDevelopment.jsx`, `AiConsulting.jsx`) updated so their CTAs lead directly to `/contact?topic=<service>`.
+- Dev: `vite.config.js` includes `mockContactApi()` so local form submissions succeed with JSON `{ ok: true }` instead of failing with Vite 404s.
 
 ## Phase 7: Home page
 - Add a "What we offer" section with the four services.

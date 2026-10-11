@@ -71,7 +71,7 @@ function AiConsulting() {
         <div className="container text-center">
           <h2>{content.ctaTitle}</h2>
           <p>{content.ctaText}</p>
-          <Link to="/contact" className="btn btn-primary mt-3">
+          <Link to="/contact?topic=ai" className="btn btn-primary mt-3">
             {content.ctaButton}
           </Link>
         </div>

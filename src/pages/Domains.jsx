@@ -142,7 +142,7 @@ function Domains() {
         <div className="container text-center">
           <h2>{content.ctaTitle}</h2>
           <p>{content.ctaText}</p>
-          <Link to="/contact" className="btn btn-primary mt-3">{content.ctaButton}</Link>
+          <Link to="/contact?topic=domain" className="btn btn-primary mt-3">{content.ctaButton}</Link>
         </div>
       </section>
     </div>

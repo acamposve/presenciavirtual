@@ -1,17 +1,29 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import { CONTACT_INFO } from '../i18n/translations'
 import './Contact.css'
 
+import { VALID_TOPICS, resolveTopic } from '../utils/contact'
+
 function Contact() {
   const { t } = useLanguage()
+  const [searchParams] = useSearchParams()
+  const initialTopic = resolveTopic(searchParams.get('topic'))
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
+    topic: initialTopic,
     message: '',
     website: '',
   })
+
+  useEffect(() => {
+    const nextTopic = resolveTopic(searchParams.get('topic'))
+    setFormData((prev) => ({ ...prev, topic: nextTopic }))
+  }, [searchParams])
 
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState(false)
@@ -41,7 +53,14 @@ function Contact() {
       if (!res.ok || !data.ok) throw new Error(data.error || 'send_failed')
 
       setSubmitted(true)
-      setFormData({ name: '', email: '', phone: '', message: '', website: '' })
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        topic: initialTopic,
+        message: '',
+        website: '',
+      })
       setTimeout(() => setSubmitted(false), 5000)
     } catch {
       setError(true)
@@ -155,6 +174,22 @@ function Contact() {
                     onChange={handleChange}
                     placeholder={t.contact.phonePlaceholder}
                   />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="topic">{t.contact.topicLabel}</label>
+                  <select
+                    id="topic"
+                    name="topic"
+                    value={formData.topic}
+                    onChange={handleChange}
+                  >
+                    {Object.entries(t.contact.topics).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div className="form-group">

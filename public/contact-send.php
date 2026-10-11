@@ -17,9 +17,20 @@ function clean_field(string $value): string
     return trim(str_replace(["\r", "\n"], '', $value));
 }
 
+$valid_topics = [
+    'general' => 'Consulta general',
+    'domain'  => 'Registro de dominios',
+    'hosting' => 'Hosting web',
+    'web'     => 'Desarrollo web',
+    'ai'      => 'Consultoría de IA',
+];
+
 $name = clean_field($_POST['name'] ?? '');
 $email = clean_field($_POST['email'] ?? '');
 $phone = clean_field($_POST['phone'] ?? '');
+$raw_topic = strtolower(clean_field($_POST['topic'] ?? ''));
+$topic = array_key_exists($raw_topic, $valid_topics) ? $raw_topic : 'general';
+$topic_label = $valid_topics[$topic];
 $message = trim($_POST['message'] ?? '');
 $honeypot = trim($_POST['website'] ?? '');
 
@@ -35,11 +46,12 @@ if ($name === '' || $message === '' || !filter_var($email, FILTER_VALIDATE_EMAIL
     exit;
 }
 
-$subject = mb_encode_mimeheader("Nuevo mensaje de contacto — {$name}", 'UTF-8');
+$subject = mb_encode_mimeheader("Nuevo mensaje [{$topic_label}] — {$name}", 'UTF-8');
 
 $body = "Nombre: {$name}\n"
     . "Email: {$email}\n"
-    . 'Teléfono: ' . ($phone !== '' ? $phone : 'No proporcionado') . "\n\n"
+    . 'Teléfono: ' . ($phone !== '' ? $phone : 'No proporcionado') . "\n"
+    . "Tema: {$topic_label} ({$topic})\n\n"
     . "Mensaje:\n{$message}\n";
 
 $headers = [
