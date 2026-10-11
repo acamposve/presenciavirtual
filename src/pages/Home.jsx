@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import DomainSearch from '../components/DomainSearch'
+import FeatureCard from '../components/FeatureCard'
 import './Home.css'
 
 function Home() {
@@ -17,9 +18,26 @@ function Home() {
             <p>{t.home.heroSubtitle}</p>
             <DomainSearch variant="hero" />
             <div className="hero-buttons">
-              <Link to="/contact" className="btn btn-primary">{t.home.ctaContact}</Link>
+              <Link to="/contact" className="btn btn-secondary">{t.home.ctaContact}</Link>
               <Link to="/services" className="btn btn-secondary">{t.home.ctaServices}</Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What we offer */}
+      <section className="section section-light">
+        <div className="container">
+          <h2 className="text-center">{t.home.servicesTitle}</h2>
+          <p className="text-center section-subtitle">{t.home.servicesSubtitle}</p>
+          <div className="grid home-services-grid">
+            {t.home.services.map((item) => (
+              <FeatureCard key={item.title} icon={item.icon} title={item.title} desc={item.desc}>
+                <Link to={item.link} className="home-service-link">
+                  {item.linkLabel}
+                </Link>
+              </FeatureCard>
+            ))}
           </div>
         </div>
       </section>

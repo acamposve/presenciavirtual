@@ -127,10 +127,17 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - Service pages (`Domains.jsx`, `Hosting.jsx`, `WebDevelopment.jsx`, `AiConsulting.jsx`) updated so their CTAs lead directly to `/contact?topic=<service>`.
 - Dev: `vite.config.js` includes `mockContactApi()` so local form submissions succeed with JSON `{ ok: true }` instead of failing with Vite 404s.
 
-## Phase 7: Home page
+## Phase 7: Home page — implemented
 - Add a "What we offer" section with the four services.
 - Place the `DomainSearch` hero variant (defined in Phase 2) on Home as the primary conversion hook, directly under the hero headline, with the existing "Talk about your project" CTA as secondary.
 - All Home domain-search strings (headline, placeholder, button, TLD chips, validation errors) in both `es` and `en`.
+
+**Implementation notes (as built)**
+- "What we offer" section added to `src/pages/Home.jsx`, rendering a responsive 4-column grid (`.home-services-grid`) of `FeatureCard` components for the four pillars: Domain registration (`/domains`), Web hosting (`/hosting`), Web development (`/web-development`), and AI consulting (`/ai-consulting`).
+- Each card includes an icon, title, description, and link to the dedicated service page with accessible link text.
+- Hero conversion hierarchy established: `DomainSearch` (hero variant) acts as the primary conversion hook directly under the hero headline and subtitle. The secondary CTA ("Hablemos de tu proyecto" / "Let's talk about your project") is styled as `.btn-secondary` on the dark hero background with translucent glass styling.
+- Home domain search copy is completely localized through `t.domains.search`, covering placeholders, buttons, labels, TLD chips, and client-side validation errors in both `es` and `en`.
+- Contract tests in `tests/home.test.mjs` verify that all 4 services are mapped in both languages with valid route targets and that the hero conversion components render as expected.
 
 ## Phase 8: QA and launch
 - Translation key parity: done, as `npm run check:i18n` (plus `npm test` and the build under `npm run verify`).
