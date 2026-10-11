@@ -103,7 +103,7 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - **Missing product data, still to be filled in (no component change needed):** case studies. `cases.items` in `src/i18n/sections/webDevelopment.js` is empty in both languages, and the page renders the `casesPending` note ("Estamos preparando los primeros casos de estudio…") instead of the grid. The cards appear on their own as soon as `items` has entries, each with `{ title, desc }`; `cases.title` / `cases.subtitle` are the section headings. `check:i18n` compares arrays index by index, so entries must be added to `es` and `en` in the same order and the same number. While `items` is empty, no card is rendered: an empty grid or an invented client would both be worse than the note.
 - The page carries no plans and no prices: its only CTA is the `/contact` form, same as the other service pages.
 
-## Phase 5: AI consulting page — implemented
+## Phase 5: AI consulting page
 - Reuse existing AI messaging (agents, RAG, document intelligence).
 - Engagement types: audit, roadmap, pilot; CTA to book the free first consultation.
 - Avoid duplicating the Solutions page; link to it or merge the overlap.
