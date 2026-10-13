@@ -17,7 +17,7 @@ function AiConsulting() {
         <div className="container">
           <h2 className="text-center">{content.engagementsTitle}</h2>
           <p className="text-center section-subtitle">{content.engagementsSubtitle}</p>
-          <ol className="ai-consulting-steps">
+          <ol className="ai-consulting-steps" role="list">
             {content.engagements.map((step, index) => (
               <li className="ai-consulting-step" key={step.title}>
                 <span className="ai-consulting-step-number" aria-hidden="true">
@@ -29,7 +29,11 @@ function AiConsulting() {
                 <h3>{step.title}</h3>
                 <p>{step.desc}</p>
                 <div className="ai-consulting-step-deliverable">
-                  <span className="deliverable-tag">{step.deliverable}</span>
+                  <span className="deliverable-tag">
+                    {/* Says what the tag is before reading its value. */}
+                    <span className="deliverable-label">{content.deliverableLabel}: </span>
+                    {step.deliverable}
+                  </span>
                 </div>
               </li>
             ))}

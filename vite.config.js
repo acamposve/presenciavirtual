@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { resolveTopic } from './src/utils/contact.js'
 
 // Mock prices for local development, kept in step with the live store
 // (ResellersPanel, USD, 12 months) so the dev UI matches production.
@@ -8,6 +9,11 @@ const MOCK_DEFAULT = ['com', 'net', 'org', 'io', 'info']
 
 // Mirrors the name rule the real endpoint enforces for a single label.
 const MOCK_NAME = /^(?!-)[a-z0-9-]{1,63}(?<!-)$/
+
+// Matches the addresses the contact form will realistically send: the real
+// endpoint is stricter (FILTER_VALIDATE_EMAIL), but a missing "@" or domain
+// must fail here too, not only in production.
+const MOCK_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // The dev server cannot run PHP, so it answers /api/domain-check with fake data.
 // Names containing "taken" (or shorter than 5 chars) are reported as registered.
@@ -52,6 +58,9 @@ function mockDomainApi() {
 }
 
 // The dev server cannot run PHP, so it answers /contact-send.php with a mock response.
+// The mock validates the same things the endpoint does, on purpose: a rule that only
+// runs on the server (the topic allowlist, the honeypot) drifts out of step with the
+// form and nobody notices in development, only in production when a lead is rejected.
 function mockContactApi() {
   return {
     name: 'mock-contact-api',
@@ -62,9 +71,40 @@ function mockContactApi() {
           res.statusCode = 405
           return res.end(JSON.stringify({ ok: false, error: 'method_not_allowed' }))
         }
-        setTimeout(() => {
-          res.end(JSON.stringify({ ok: true }))
-        }, 300)
+
+        const chunks = []
+        req.on('data', (chunk) => chunks.push(chunk))
+        req.on('end', () => {
+          const body = new URLSearchParams(Buffer.concat(chunks).toString('utf8'))
+
+          // Honeypot: only bots fill it. Pretend success, exactly like the endpoint.
+          if ((body.get('website') || '').trim() !== '') {
+            return res.end(JSON.stringify({ ok: true }))
+          }
+
+          // An unknown topic is never a rejection: the endpoint degrades it to
+          // 'general' too. Resolving it with the frontend helper keeps one
+          // allowlist instead of a third copy that can rot on its own.
+          const submitted = (body.get('topic') || '').trim().toLowerCase()
+          const topic = resolveTopic(submitted)
+          if (submitted && submitted !== topic) {
+            server.config.logger.warn(
+              `[mock-contact-api] unknown topic "${submitted}", using "${topic}"`,
+            )
+          }
+
+          const name = (body.get('name') || '').trim()
+          const email = (body.get('email') || '').trim()
+          const message = (body.get('message') || '').trim()
+          if (name === '' || message === '' || !MOCK_EMAIL.test(email)) {
+            res.statusCode = 422
+            return res.end(JSON.stringify({ ok: false, error: 'invalid_input' }))
+          }
+
+          setTimeout(() => {
+            res.end(JSON.stringify({ ok: true }))
+          }, 300)
+        })
       })
     },
   }

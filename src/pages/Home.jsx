@@ -33,6 +33,9 @@ function Home() {
           <div className="grid home-services-grid">
             {t.home.services.map((item) => (
               <FeatureCard key={item.title} icon={item.icon} title={item.title} desc={item.desc}>
+                {/* Only the hosting card carries a badge today; rendering it only
+                    when the key exists keeps the other three cards unchanged. */}
+                {item.badge && <span className="home-service-badge">{item.badge}</span>}
                 <Link to={item.link} className="home-service-link">
                   {item.linkLabel}
                 </Link>
