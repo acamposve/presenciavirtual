@@ -1,37 +1,31 @@
 // Single source of truth for the privacy policy values that only the owner can
-// provide. Nothing here is a guess and nothing has a default: every field starts
-// as an empty string on purpose, because inventing a legal name, an address, a
-// retention period or a supervisory authority would be publishing a fact that
-// nobody confirmed.
+// provide. Nothing here is a guess: these are the values he supplied.
 //
-// Consequences of leaving a field empty (both are automatic, no component change
-// is needed to publish the page):
-//   1. src/pages/Privacy.jsx renders the value as `t.privacy.pendingValue`
-//      ("Pendiente de completar" / "To be completed") instead of the value.
-//   2. While at least one field is empty, the page shows the draft notice before
-//      the hero and `missingPrivacyFields()` names what is left. The notice
-//      disappears on its own once every field below has a value.
+// Two of the seven values he gave are text read in the page's language - the
+// retention period ("1 ano" / "1 year") and the last-updated date ("Octubre de
+// 2026" / "October 2026") - so they live in src/i18n/sections/privacy.js, one
+// per language, instead of in this language-neutral module.
+//
+// What stays here is language-neutral by nature: names, an address, a country
+// and a governing law. Leaving a field empty still works exactly as before: the
+// page renders `t.privacy.pendingValue` instead of the value and shows the draft
+// notice before the hero while `missingPrivacyFields()` is not empty.
 //
 // The contact email is deliberately NOT here: it comes from CONTACT_INFO in
 // src/i18n/translations.js, so it is not duplicated in two places.
 export const PRIVACY_OWNER_DATA = {
   // Legal or business name of the person or company responsible for the data.
-  legalName: '',
+  legalName: 'Presencia Virtual',
   // Postal address of the controller.
-  address: '',
-  // How long the contact-form messages are kept, as it should be read by a
-  // visitor (free text, e.g. "3 años desde la última respuesta").
-  retentionPeriod: '',
+  address: 'Av Garibaldi 2151, Montevideo, Uruguay',
   // Competent supervisory authority a visitor can complain to.
-  supervisoryAuthority: '',
-  // Governing law / jurisdiction of the policy (e.g. "Uruguay").
-  jurisdiction: '',
+  supervisoryAuthority: 'NIC UY',
+  // Governing law / jurisdiction of the policy.
+  jurisdiction: 'Uruguay',
   // Country where the site and the controller mailbox are hosted. It drives the
   // international-transfers section: without it, that section would be a claim
   // about where the data is processed that nobody has confirmed.
-  hostingCountry: '',
-  // Date of the last update of the policy, written as it should be displayed.
-  lastUpdated: '',
+  hostingCountry: 'USA',
 }
 
 // The declaration order above is the render order and the contract the tests

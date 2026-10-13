@@ -15,6 +15,10 @@ export const privacy = {
     draftNoticeText:
       'Este documento no está completo ni revisado todavía. No debería publicarse como política válida hasta que el responsable complete los datos que faltan y los textos pasen una revisión legal. Falta lo siguiente:',
     pendingValue: 'Pendiente de completar',
+    // Valores del dueño que se leen en el idioma de la página, por eso viven aquí
+    // y no en el módulo neutro src/data/privacy.js.
+    retentionPeriod: '1 año',
+    lastUpdated: 'Octubre de 2026',
     fieldLabels: {
       legalName: 'Razón social o nombre legal',
       address: 'Domicilio',
@@ -147,6 +151,10 @@ export const privacy = {
     draftNoticeText:
       'This document is neither complete nor reviewed yet. It should not be published as a valid policy until the controller fills in the missing details and the wording goes through a legal review. Still missing:',
     pendingValue: 'To be completed',
+    // Owner values read in the page's language, which is why they live here and
+    // not in the language-neutral src/data/privacy.js.
+    retentionPeriod: '1 year',
+    lastUpdated: 'October 2026',
     fieldLabels: {
       legalName: 'Legal or business name',
       address: 'Address',

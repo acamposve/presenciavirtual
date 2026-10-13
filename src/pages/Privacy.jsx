@@ -94,7 +94,7 @@ function Privacy() {
         <dl className="privacy-data">
           <PrivacyValue
             label={content.fieldLabels.retentionPeriod}
-            value={owner.retentionPeriod}
+            value={content.retentionPeriod}
             pending={pending}
           />
         </dl>
@@ -134,7 +134,7 @@ function Privacy() {
 
       <PolicySection id="changes" content={content.sections.changes}>
         <dl className="privacy-data">
-          <PrivacyValue label={content.fieldLabels.lastUpdated} value={owner.lastUpdated} pending={pending} />
+          <PrivacyValue label={content.fieldLabels.lastUpdated} value={content.lastUpdated} pending={pending} />
         </dl>
       </PolicySection>
     </div>

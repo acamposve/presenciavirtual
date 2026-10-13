@@ -31,14 +31,15 @@ const privacySource = read('src', 'pages', 'Privacy.jsx')
 const privacyDataSource = read('src', 'data', 'privacy.js')
 const sitemap = read('public', 'sitemap.xml')
 
-// Fields the brief requires, plus the documented additions below.
+// Language-neutral owner fields. The retention period and the last-updated date
+// are deliberately not here: they are text read in the page's language, so they
+// live in src/i18n/sections/privacy.js (one value per language) and are asserted
+// by their own test below.
 const REQUIRED_OWNER_FIELDS = [
   'legalName',
   'address',
-  'retentionPeriod',
   'supervisoryAuthority',
   'jurisdiction',
-  'lastUpdated',
 ]
 // Documented addition: the international-transfers section needs the hosting
 // country to state a fact about where data is processed instead of a generality.
@@ -159,8 +160,8 @@ test('missingPrivacyFields(filled) reports nothing', () => {
 
 test('missingPrivacyFields reports only the fields still empty, in declaration order', () => {
   const filled = Object.fromEntries(PRIVACY_FIELD_KEYS.map((key) => [key, 'valor']))
-  const partial = { ...filled, address: '', lastUpdated: '   ' }
-  assert.deepEqual(missingPrivacyFields(partial), ['address', 'lastUpdated'])
+  const partial = { ...filled, address: '', jurisdiction: '   ' }
+  assert.deepEqual(missingPrivacyFields(partial), ['address', 'jurisdiction'])
 })
 
 test('missingPrivacyFields treats whitespace, undefined and null as missing', () => {
@@ -168,6 +169,21 @@ test('missingPrivacyFields treats whitespace, undefined and null as missing', ()
   assert.deepEqual(missingPrivacyFields({ ...filled, legalName: '\t \n' }), ['legalName'])
   assert.deepEqual(missingPrivacyFields({ ...filled, legalName: undefined }), ['legalName'])
   assert.deepEqual(missingPrivacyFields({ ...filled, legalName: null }), ['legalName'])
+})
+
+// --- Owner values that are text in the page's language ----------------------
+
+test('the retention period and the last-updated date are filled in both languages', () => {
+  // They are not part of PRIVACY_OWNER_DATA, so missingPrivacyFields() cannot
+  // catch them: without this test, an empty value would render as "pending" in
+  // one language only and the draft notice would not appear either.
+  for (const lang of ['es', 'en']) {
+    for (const key of ['retentionPeriod', 'lastUpdated']) {
+      const value = privacy[lang][key]
+      assert.equal(typeof value, 'string', `${lang}.${key} is not text`)
+      assert.notEqual(value.trim(), '', `${lang}.${key} is empty`)
+    }
+  }
 })
 
 // --- Draft notice ----------------------------------------------------------
