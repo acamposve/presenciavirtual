@@ -114,6 +114,7 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - AI messaging reuses the capabilities published in `src/i18n/sections/services.js` (`AI Agents & Workflows`, `RAG & enterprise assistants`, `Document intelligence`). No external vendor or unconfirmed LLM provider was invented.
 - Avoids duplication with `/services` by providing a direct link (`solutionsLink`) to the full architecture diagram and comprehensive use cases.
 - CTA leads to `/contact` for the free initial consultation.
+- Reviewed after Phase 7 and **confirmed by the owner, so both stay unchanged**: the privacy line in `principles` is accurate - a published privacy policy is still required to back it before selling - and so are the pilot timeline and its deliverable.
 
 ## Phase 6: Forms and leads — implemented
 - Add a `topic` field (domain, hosting, web, AI) to `contact-send.php` and use it in the email subject.
