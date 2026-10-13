@@ -11,6 +11,7 @@ const ROUTE_META_KEYS = {
   '/web-development': 'webDevelopment',
   '/ai-consulting': 'aiConsulting',
   '/contact': 'contact',
+  '/privacy': 'privacy',
   '/404': 'notFound',
 }
 

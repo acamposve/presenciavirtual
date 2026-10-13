@@ -1,0 +1,115 @@
+/* Privacy policy page. Sibling of Privacy.jsx, same pattern as the other page
+   stylesheets, using the variables from src/styles/globals.css. The page is a
+   long read, so the measure is narrower and the sections are separated. */
+
+.privacy-page .section {
+  padding: 2.75rem 0;
+}
+
+.privacy-page .section + .section {
+  border-top: 1px solid var(--border-color);
+}
+
+/* Longer line length is harder to follow in a legal text: keep the column at a
+   comfortable measure even though .container allows 1200px. */
+.privacy-page .section .container,
+.privacy-page .privacy-draft-notice .container {
+  max-width: 860px;
+}
+
+.privacy-section h2 {
+  font-size: 1.4rem;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+
+.privacy-list {
+  margin: 0 0 1.5rem 1.25rem;
+}
+
+.privacy-list li {
+  margin-bottom: 0.6rem;
+}
+
+/* Data blocks: the values that come from src/data/privacy.js. */
+.privacy-data {
+  margin: 1.5rem 0;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+}
+
+.privacy-value {
+  margin-bottom: 1rem;
+}
+
+.privacy-value:last-child {
+  margin-bottom: 0;
+}
+
+.privacy-value dt {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--ink);
+}
+
+.privacy-value dd {
+  margin: 0.15rem 0 0;
+  color: var(--text-color);
+}
+
+/* A value nobody has filled in yet reads as missing, not as an answer. */
+.privacy-value-pending {
+  color: #b45309;
+  font-style: italic;
+}
+
+.privacy-contact-line {
+  margin-bottom: 1rem;
+}
+
+/* Draft notice. It is deliberately the first thing on the page and it is styled
+   as a warning instead of a footnote: its only job is to make an incomplete
+   policy impossible to publish without noticing. It removes itself from the
+   render when missingPrivacyFields() returns an empty list. */
+.privacy-draft-notice {
+  padding: 1.5rem 0;
+  background-color: #fff7ed;
+  border-bottom: 1px solid #fed7aa;
+  border-left: 4px solid #f59e0b;
+  color: #7c2d12;
+}
+
+.privacy-draft-title {
+  font-size: 1rem;
+  color: #9a3412;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.privacy-draft-notice p {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+
+.privacy-draft-fields {
+  margin: 0.75rem 0 0 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.privacy-draft-fields li {
+  margin-bottom: 0.2rem;
+}
+
+@media (max-width: 768px) {
+  .privacy-page .section {
+    padding: 2rem 0;
+  }
+
+  .privacy-data {
+    padding: 1rem 1.15rem;
+  }
+}

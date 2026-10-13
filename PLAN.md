@@ -146,6 +146,47 @@ The ResellersPanel Reseller API v2.0 requires credentials, so it must be called 
 - Still open on the server, and the real launch blockers: `public/.htaccess` must be uploaded, `public/api/config.php` must exist with the live credentials, and `/api/domain-check.php` must answer. `public/api/ping.php` tells which of the three is missing.
 - Deployment is by hand, for the reason and the steps recorded under `## Deploy` below.
 
+## Phase 9: Privacy policy — page built, owner data still missing
+The site collected personal data (contact form, domain search IP counter, hosting
+logs) with no privacy page, while `/ai-consulting` already stated "Tus datos no se
+usan para entrenar modelos públicos". That sentence stays as it is and now has the
+policy it needed behind it.
+
+**Implementation notes (as built)**
+- Route `/privacy`: `src/pages/Privacy.jsx` + `src/pages/Privacy.css`, copy in
+  `src/i18n/sections/privacy.js` (es/en), metadata in `src/i18n/sections/meta.js`
+  and the key in `src/components/RouteMeta.jsx`. Ten sections: controller, data
+  collected, purposes and basis, retention, third parties, international
+  transfers, rights, cookies and local storage, security, changes.
+- The page describes what the code actually does: the contact form fields, the
+  domain search travelling to the registrar through our own endpoint, the per-IP
+  counter and the temporary caches, the usual hosting logs, `pv-lang` in
+  `localStorage`, Google Fonts, and the registrar's own site for orders and
+  payments. No certification, no compliance statement and no security measure
+  that is not in the code (HTTPS is not claimed: `public/.htaccess` has the
+  forced-HTTPS rule commented out, so it is not verified).
+- Footer gets a legal block with the privacy link (Terms and Refund to be added
+  there once they exist, left as comments), and the contact form carries a
+  consent notice next to the submit button linking to the policy. That notice did
+  not exist before, and the form is where the data is collected.
+- `public/sitemap.xml` lists `/privacy` (yearly, priority 0.3, below `/about`).
+- **Missing owner data, still to be filled in (no component change needed):**
+  `src/data/privacy.js` is the single source for legal name, address, retention
+  period, supervisory authority, governing law, hosting country and last-updated
+  date. All of them start empty on purpose. While any is empty, the page shows a
+  draft notice before the hero listing what is missing, and each empty value
+  renders as "Pendiente de completar" / "To be completed". Filling the file makes
+  the notice disappear on its own. The contact email is not duplicated there: it
+  comes from `CONTACT_INFO`.
+- **Still pending: a legal review of the texts.** The wording is honest about what
+  the site does, but no one here is a lawyer: the copy has to be reviewed (and the
+  "consent as the basis for the form data" statement confirmed) before the page is
+  considered valid.
+- `tests/privacy.test.mjs` covers the route, the metadata key, the footer and
+  contact links, the sitemap entry, the field contract of `missingPrivacyFields()`
+  (empty, filled, partial and whitespace) and the presence and order of all ten
+  sections in both languages.
+
 ## Deploy
 
 Publishing is manual. The hosting refuses FTP connections from CI runners, so the
@@ -177,7 +218,9 @@ while reporting success. The workflow was removed instead of left pretending.
 - API credentials must never reach the client or the repo. They currently live in `public/api/config.php`, which is gitignored but is copied into `dist/` by the build, so every deploy artifact contains them.
 - `.uy` domains have local-registry rules and may need manual handling; the store does not sell them, so they are simply absent from results.
 - Domain search needs rate limiting and caching to prevent abuse and slowness (both implemented; the rate limiter holds one exclusive lock across read/check/write).
-- Terms, refund and privacy pages are needed before selling hosting and domains.
+- Terms and refund pages are still needed before selling hosting and domains. The
+  privacy page exists at `/privacy` (Phase 9) but is a draft until the owner fills
+  `src/data/privacy.js` and the texts get a legal review.
 - Pricing must be kept in sync with ResellersPanel: the API is the source of truth at runtime (1 h cache), but the dev mock and any figure written in docs go stale.
 - The contact form has no rate limiting and no CAPTCHA beyond a honeypot, and it does not log a failed `mail()`.
 - Routing depends on `public/.htaccess`; without it every route except `/` returns 404.

@@ -36,6 +36,11 @@ export const meta = {
       title: 'Contacto — Presencia Virtual',
       description: 'Contanos tu proyecto. Atendemos desde Montevideo, Uruguay, a clientes de cualquier país.',
     },
+    privacy: {
+      title: 'Política de Privacidad — Presencia Virtual',
+      description:
+        'Qué datos personales recoge este sitio, para qué se usan, quién más los ve y cómo ejercer tus derechos.',
+    },
     notFound: {
       title: 'Página no encontrada — Presencia Virtual',
       description: 'La página que buscás no existe o cambió de dirección.',
@@ -77,6 +82,11 @@ export const meta = {
     contact: {
       title: 'Contact — Presencia Virtual',
       description: 'Tell us about your project. Based in Montevideo, Uruguay, serving clients in any country.',
+    },
+    privacy: {
+      title: 'Privacy Policy — Presencia Virtual',
+      description:
+        'What personal data this site collects, what it is used for, who else sees it and how to exercise your rights.',
     },
     notFound: {
       title: 'Page not found — Presencia Virtual',

@@ -9,6 +9,7 @@ import { hosting } from './sections/hosting'
 import { webDevelopment } from './sections/webDevelopment'
 import { aiConsulting } from './sections/aiConsulting'
 import { contact } from './sections/contact'
+import { privacy } from './sections/privacy'
 import { footer } from './sections/footer'
 import { notFound } from './sections/notFound'
 
@@ -24,6 +25,7 @@ const sections = {
   webDevelopment,
   aiConsulting,
   contact,
+  privacy,
   footer,
   notFound,
 }

@@ -98,6 +98,21 @@
   cursor: not-allowed;
 }
 
+/* Consent notice under the submit button: the form is where personal data is
+   collected, so the link to the privacy policy belongs here (see Contact.jsx). */
+.form-consent {
+  margin: 0.85rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.form-consent a {
+  color: var(--accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* Honeypot: off-screen for bots, invisible and unreachable for real users */
 .hp-field {
   position: absolute;

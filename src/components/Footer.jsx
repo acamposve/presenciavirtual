@@ -35,6 +35,14 @@ function Footer() {
             <p>{t.contact.phoneLabel}: <a href={`tel:${CONTACT_INFO.phoneHref}`}>{CONTACT_INFO.phone}</a></p>
             <p>{t.contact.locationValue}</p>
           </div>
+          <div className="footer-section">
+            <h4>{t.footer.legalTitle}</h4>
+            <ul>
+              <li><Link to="/privacy">{t.footer.privacyLink}</Link></li>
+              {/* Términos y condiciones: se agrega acá cuando exista. */}
+              {/* Política de reembolsos: se agrega acá cuando exista. */}
+            </ul>
+          </div>
         </div>
         <div className="footer-bottom">
           <p>&copy; {currentYear} {t.brand.name}. {t.footer.rights}</p>
