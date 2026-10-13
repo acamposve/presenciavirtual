@@ -5,6 +5,7 @@ export const aiConsulting = {
     engagementsTitle: 'Cómo trabajamos',
     engagementsSubtitle:
       'Un proceso en tres etapas para validar valor antes de comprometer grandes inversiones.',
+    deliverableLabel: 'Entregable',
     engagements: [
       {
         icon: '🔍',
@@ -30,7 +31,7 @@ export const aiConsulting = {
     capabilities: [
       {
         icon: '🤖',
-        title: 'AI Agents & Workflows',
+        title: 'Agentes de IA y workflows',
         desc: 'Agentes autónomos que coordinan tareas complejas, interactúan con APIs y reducen el trabajo manual repetitivo.',
       },
       {
@@ -74,6 +75,7 @@ export const aiConsulting = {
     engagementsTitle: 'How we work',
     engagementsSubtitle:
       'A three-stage path to validate value before committing major investments.',
+    deliverableLabel: 'Deliverable',
     engagements: [
       {
         icon: '🔍',

@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import { CONTACT_INFO } from '../i18n/translations'
+// The selector is built from t.contact.topics, and tests/contact.test.mjs already
+// asserts that every VALID_TOPICS entry is translated in both languages, so the
+// allowlist needs no second copy here.
+import { resolveTopic } from '../utils/contact'
 import './Contact.css'
-
-import { VALID_TOPICS, resolveTopic } from '../utils/contact'
 
 function Contact() {
   const { t } = useLanguage()

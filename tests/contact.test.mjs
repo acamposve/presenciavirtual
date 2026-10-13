@@ -1,5 +1,6 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -68,4 +69,105 @@ test('service pages pass valid topic query parameters to /contact', () => {
       assert.ok(VALID_TOPICS.includes(topic), `invalid topic in ${file}: ${topic}`)
     }
   }
+})
+
+// The endpoint is executed for real, through the PHP CLI: `php -r` sets $_POST and
+// $_SERVER, includes public/contact-send.php and leaves the JSON body on stdout
+// (in that SAPI header() and http_response_code() are inert). No server, no port,
+// no fixtures, so a TypeError in the endpoint fails here instead of in production.
+const phpProbe = spawnSync('php', ['-v'], { encoding: 'utf8' })
+const hasPhp = !phpProbe.error && phpProbe.status === 0
+const skipReason = 'php is not on PATH: skipping the endpoint execution tests'
+const phpFile = join(root, 'public', 'contact-send.php').replace(/\\/g, '/')
+
+function phpLiteral(value) {
+  if (Array.isArray(value)) return `[${value.map(phpLiteral).join(', ')}]`
+  if (value && typeof value === 'object') {
+    const pairs = Object.entries(value).map(([key, item]) => `${phpLiteral(key)} => ${phpLiteral(item)}`)
+    return `[${pairs.join(', ')}]`
+  }
+  return `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'")}'`
+}
+
+function runEndpoint(post, method = 'POST') {
+  const script = [
+    // A fatal error has to be visible in the output, not swallowed.
+    "ini_set('display_errors', '1');",
+    `$_SERVER['REQUEST_METHOD'] = ${phpLiteral(method)};`,
+    `$_POST = ${phpLiteral(post)};`,
+    `include '${phpFile}';`,
+  ].join(' ')
+
+  try {
+    return execFileSync('php', ['-r', script], { cwd: root, encoding: 'utf8' })
+  } catch (error) {
+    // A fatal error exits non-zero; keep what PHP printed so the assertion can show it.
+    return `${error.stdout ?? ''}${error.stderr ?? ''}`
+  }
+}
+
+function responseOf(output) {
+  assert.doesNotMatch(
+    output,
+    /Fatal error|Uncaught|TypeError/,
+    `the endpoint failed instead of answering:\n${output}`,
+  )
+  const json = output.match(/\{"ok":(?:true|false)[^}]*\}/)
+  assert.ok(json, `no JSON response on stdout:\n${output}`)
+  return JSON.parse(json[0])
+}
+
+test('contact-send.php: an array in `topic` is answered, not fatal', (t) => {
+  if (!hasPhp) return t.skip(skipReason)
+
+  const output = runEndpoint({
+    name: 'Ana',
+    email: 'ana@example.com',
+    message: 'Hola',
+    topic: ['hosting'],
+  })
+  const payload = responseOf(output)
+
+  // With valid name/email/message the request reaches mail(); in a CLI with no
+  // mail transport that is send_failed. Either way it is an answer, and the empty
+  // topic is not what makes it fail.
+  assert.notEqual(payload.error, 'invalid_input')
+})
+
+test('contact-send.php: an array in `name` is answered, not fatal', (t) => {
+  if (!hasPhp) return t.skip(skipReason)
+
+  const output = runEndpoint({
+    name: ['Ana'],
+    email: 'ana@example.com',
+    message: 'Hola',
+  })
+
+  // A non-string name normalizes to '' and gets the same 422 an empty name gets,
+  // before anything touches mail().
+  assert.deepEqual(responseOf(output), { ok: false, error: 'invalid_input' })
+})
+
+test('contact-send.php: an unknown topic is handled like `general`', (t) => {
+  if (!hasPhp) return t.skip(skipReason)
+
+  const base = { name: 'Ana', email: 'ana@example.com', message: 'Hola' }
+  const unknown = responseOf(runEndpoint({ ...base, topic: 'wordpress' }))
+  const general = responseOf(runEndpoint({ ...base, topic: 'general' }))
+
+  assert.deepEqual(unknown, general, 'an unknown topic must degrade to general, not change the answer')
+  assert.notEqual(unknown.error, 'invalid_input')
+})
+
+test('contact-send.php: a GET request is rejected with method_not_allowed', (t) => {
+  if (!hasPhp) return t.skip(skipReason)
+
+  assert.deepEqual(responseOf(runEndpoint({}, 'GET')), { ok: false, error: 'method_not_allowed' })
+})
+
+test('contact-send.php: an invalid email is rejected with invalid_input', (t) => {
+  if (!hasPhp) return t.skip(skipReason)
+
+  const output = runEndpoint({ name: 'Ana', email: 'ana(at)example.com', message: 'Hola' })
+  assert.deepEqual(responseOf(output), { ok: false, error: 'invalid_input' })
 })

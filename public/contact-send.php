@@ -25,14 +25,19 @@ $valid_topics = [
     'ai'      => 'Consultoría de IA',
 ];
 
-$name = clean_field($_POST['name'] ?? '');
-$email = clean_field($_POST['email'] ?? '');
-$phone = clean_field($_POST['phone'] ?? '');
-$raw_topic = strtolower(clean_field($_POST['topic'] ?? ''));
+// A form field is whatever the client sent: `topic[]=x` arrives as an array, and
+// handing that to a string parameter would be a fatal TypeError (a 500 with no
+// JSON). Normalise to a string first; anything that is not a string is empty.
+$post = fn(string $key): string => is_string($_POST[$key] ?? null) ? $_POST[$key] : '';
+
+$name = clean_field($post('name'));
+$email = clean_field($post('email'));
+$phone = clean_field($post('phone'));
+$raw_topic = strtolower(clean_field($post('topic')));
 $topic = array_key_exists($raw_topic, $valid_topics) ? $raw_topic : 'general';
 $topic_label = $valid_topics[$topic];
-$message = trim($_POST['message'] ?? '');
-$honeypot = trim($_POST['website'] ?? '');
+$message = trim($post('message'));
+$honeypot = trim($post('website'));
 
 // Honeypot: only bots fill this hidden field. Pretend success, send nothing.
 if ($honeypot !== '') {
