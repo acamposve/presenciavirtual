@@ -19,7 +19,7 @@ export const PRIVACY_OWNER_DATA = {
   // Postal address of the controller.
   address: 'Av Garibaldi 2151, Montevideo, Uruguay',
   // Competent supervisory authority a visitor can complain to.
-  supervisoryAuthority: 'NIC UY',
+  supervisoryAuthority: 'Unidad Reguladora y de Control de Datos Personales',
   // Governing law / jurisdiction of the policy.
   jurisdiction: 'Uruguay',
   // Country where the site and the controller mailbox are hosted. It drives the
