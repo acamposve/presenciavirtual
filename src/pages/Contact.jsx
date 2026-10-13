@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useLanguage } from '../i18n/LanguageContext'
 import { CONTACT_INFO } from '../i18n/translations'
 // The selector is built from t.contact.topics, and tests/contact.test.mjs already
@@ -210,6 +210,15 @@ function Contact() {
                 <button type="submit" className="btn btn-primary" disabled={sending}>
                   {sending ? t.contact.sending : t.contact.submit}
                 </button>
+
+                {/* This form is where personal data is collected, so the notice
+                    that the visitor is accepting a policy belongs next to the
+                    submit button, not only in the footer. */}
+                <p className="form-consent">
+                  {t.contact.consentBefore}{' '}
+                  <Link to="/privacy">{t.contact.consentLink}</Link>
+                  {t.contact.consentAfter}
+                </p>
               </form>
             </div>
           </div>

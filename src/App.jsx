@@ -10,6 +10,7 @@ import Hosting from './pages/Hosting'
 import WebDevelopment from './pages/WebDevelopment'
 import AiConsulting from './pages/AiConsulting'
 import Contact from './pages/Contact'
+import Privacy from './pages/Privacy'
 import NotFound from './pages/NotFound'
 import './App.css'
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/web-development" element={<WebDevelopment />} />
             <Route path="/ai-consulting" element={<AiConsulting />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/privacy" element={<Privacy />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>

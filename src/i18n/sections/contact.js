@@ -29,6 +29,9 @@ export const contact = {
     sending: 'Enviando...',
     success: '¡Gracias por tu mensaje! Nos pondremos en contacto pronto.',
     error: 'No pudimos enviar tu mensaje. Probá de nuevo o escribinos directamente por email.',
+    consentBefore: 'Al enviar este formulario aceptás nuestra',
+    consentLink: 'Política de Privacidad',
+    consentAfter: '.',
   },
   en: {
     title: 'Contact',
@@ -60,5 +63,8 @@ export const contact = {
     sending: 'Sending...',
     success: "Thanks for your message! We'll get back to you soon.",
     error: "We couldn't send your message. Please try again or email us directly.",
+    consentBefore: 'By submitting this form you accept our',
+    consentLink: 'Privacy Policy',
+    consentAfter: '.',
   },
 }
